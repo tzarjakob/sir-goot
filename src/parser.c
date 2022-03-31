@@ -353,6 +353,7 @@ int parser_map(FILE *src, game_map_t *map)
                 int bottom_right_y = get_next_number(src);
                 if (top_left_x != -1 && top_left_x != -1 && top_left_x != -1 && top_left_x != -1)
                 {
+                    add_to_map_rect(map, WALL_T, top_left_x, top_left_y, bottom_right_x, bottom_right_y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;

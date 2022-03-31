@@ -1,7 +1,7 @@
 #include "data.h"
+#include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
-
 
 int wlog(const char* topic, const char *text)
 {
@@ -36,7 +36,7 @@ int deinit_gmt(game_map_t* t){
 }
 
 // returns 1 if everything went ok, else returns -1
-int add_to_map(game_map_t* game_map, int tlx, int tly, int brx, int bry)
+int add_to_map_rect(game_map_t* game_map, unsigned char type, int tlx, int tly, int brx, int bry)
 {
     int retval = 1;
     // checks
@@ -45,7 +45,11 @@ int add_to_map(game_map_t* game_map, int tlx, int tly, int brx, int bry)
         retval = -1;
     } else 
     {
-        
+        for(int i=tly; i< bry; ++i) {
+            for(int j=tlx; j<bry; ++j) {
+                game_map->data[i][j] = type;
+            }
+        }
     }
     return retval;
 }

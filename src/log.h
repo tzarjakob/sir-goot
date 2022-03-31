@@ -1,5 +1,5 @@
-#ifndef AUX_H
-#define AUX_H
+#ifndef LOG_H
+#define LOG_H
 
 #include <ncurses.h>
 

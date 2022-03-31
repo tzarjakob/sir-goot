@@ -1,5 +1,5 @@
 #include <string.h>
-#include "aux.h"
+#include "log.h"
 
 #include <ncurses.h>
 

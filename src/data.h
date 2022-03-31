@@ -37,7 +37,7 @@ typedef struct {
 
 int init_gmt(game_map_t* map, int width, int height);
 int deinit_gmt(game_map_t*);
-
+int add_to_map_rect(game_map_t* game_map, unsigned char type, int tlx, int tly, int brx, int bry);
 
 
 
