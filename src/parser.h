@@ -10,7 +10,7 @@
 #define NOT_VALID_CHAR   -2
 #define NUMBER_NOT_FOUND  -1
 
-#define BUFFERSIZE        40
+#define BUFFERSIZE        100
 
 #define MODE_PARSER       1
 

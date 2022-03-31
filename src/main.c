@@ -46,6 +46,11 @@ void render_map(WINDOW *win, game_map_t *map)
 int load_config(const char *path, config_t *game_config)
 {
     FILE *config = fopen(path, "r");
+    if (config == NULL)
+    {
+        return -1;
+    }
+    // int pars_conf_res = 2;
     int pars_conf_res = parser_config_file(config, game_config);
     switch (pars_conf_res)
     {
@@ -107,11 +112,11 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     clear();
     config_t config;
     int p_conf_res = load_config(path, &config);
-    if (p_conf_res != 1)
+    if (p_conf_res == BUFFER_END)
     {
         game_map_t game_map;
         FILE *game_file = fopen(config.path_initial_map, "r");
-        if(game_file == NULL) 
+        if (game_file == NULL)
         {
             wlog("File opening", "Failed to open game_file from path of config type");
             return -1;
@@ -119,7 +124,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
         int pars_map_res = load_game_map_s(game_file, &game_map);
         fclose(game_file);
 
-        if (pars_map_res != 1)
+        if (pars_map_res == BUFFER_END)
         {
             // 3. adjust the size of this window
             WINDOW *map_win = newwin(game_map.e_height + 2,
@@ -185,8 +190,9 @@ void main_screen(const int WIDTH, const int HEIGHT)
             break;
         case 'l':
         {
-            char path[BUFFER_LEN];
-            load_map_option(path);
+            wlog("main screen", "pressed l");
+            char path[BUFFER_LEN] = "/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/config.gigi";
+            // load_map_option(path);
             int res = game_loop(path, WIDTH, HEIGHT);
             char res_str[BUFFER_LEN];
             sprintf(res_str, "%d", res);

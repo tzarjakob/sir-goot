@@ -1,5 +1,5 @@
 (* Questa e' la prima mappa che si deve caricare *)
-$ dimensions 50 20
+$ dimensions 40 15
 $ start_p 2 5
 $ end_p 45 10 
 $ wall 2 3 6 6 

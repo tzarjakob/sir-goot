@@ -1,7 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#define BUFFER_LEN  90
+#define BUFFER_LEN  100
 #define MAX_WIDTH   200
 #define MAX_HEIGHT  50
 

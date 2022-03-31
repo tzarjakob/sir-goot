@@ -72,7 +72,9 @@ char *get_next_word(FILE *src)
             free(next_word);
             return NULL;
         }
-        else if ((c_curr >= 'A' && c_curr <= 'Z') || (c_curr >= 'a' && c_curr <= 'z'))
+        else if ((c_curr >= 'A' && c_curr <= 'Z') ||
+                 (c_curr >= 'a' && c_curr <= 'z') || c_curr == '/' ||
+                 (c_curr >= '0' && c_curr <= '9'))
         {
             FOUND = 1;
             // NEW WORD!!!
@@ -454,8 +456,9 @@ int parser_config_file(FILE *src, config_t *config)
             }
             else if (strcmp(ob_name, "path") == 0)
             {
+                wlog("Config parsing", "PATH IDENTIFIED!!!");
                 char *path = get_next_word(src);
-                if (src == NULL)
+                if (path == NULL)
                 {
                     SIGNAL_ERROR = SYNTAX_ERROR;
                 }
@@ -469,8 +472,8 @@ int parser_config_file(FILE *src, config_t *config)
             else
             {
                 SIGNAL_ERROR = SYNTAX_ERROR;
+                free(ob_name);
             }
-
             break;
         }
         default:
