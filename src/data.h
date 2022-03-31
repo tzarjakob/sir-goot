@@ -10,6 +10,7 @@
 #define TRAP_T 3
 #define STARTING_P 4
 #define ENDING_P 5
+#define HERO_P 6
 
 #define LEXICAL_ERROR 1
 #define SYNTAX_ERROR 2
@@ -26,7 +27,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int wlog(const char *topic, const char *text);
 
 typedef struct
 {
@@ -42,19 +42,13 @@ typedef struct
 
 typedef struct
 {
-    point position;
-    char rend;
-    int color;
-} character;
-
-typedef struct
-{
     unsigned char **data;
     int e_width;
     int e_height;
     point starting_point;
     point ending_point;
     char next_map[BUFFERSIZE];
+    point hero_pos;
 } game_map_t;
 
 // rows = height
@@ -63,5 +57,6 @@ int init_gmt(game_map_t *map, int width, int height);
 int deinit_gmt(game_map_t *);
 int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, int brx, int bry);
 int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y);
+int move_hero(game_map_t *game_map, point* dest);
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 
-void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text);
+int wlog(const char *topic, const char *text);
+int wlog_int(const char *topic, int x);
 
 #endif 

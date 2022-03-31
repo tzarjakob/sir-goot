@@ -5,10 +5,17 @@
 #include "parser.h"
 #include "render.h"
 
+void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
+{
+    int x = (box_width - strlen(text)) / 2;
+    mvwprintw(win, line, x, text);
+}
+
 void render_pixel(WINDOW *win, unsigned char c, int width, int height)
 {
     // switch type
-    width++; height++;
+    width++;
+    height++;
     switch (c)
     {
     case WALL_T:
@@ -26,8 +33,17 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         mvwprintw(win, height, width, "&");
         break;
     }
-    default:
+    case HERO_P:
+    {
+        mvwprintw(win, height, width, "8");
         break;
+    }
+
+    default:
+    {
+        mvwprintw(win, height, width, " ");
+        break;
+    }
     }
 }
 
@@ -42,8 +58,6 @@ void render_map(WINDOW *win, game_map_t *map)
     }
     wrefresh(win);
 }
-
-
 
 int load_config(const char *path, config_t *game_config)
 {
@@ -108,7 +122,8 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     if (p_conf_res == BUFFER_END)
     {
         game_map_t game_map;
-        game_map.e_height = -1; game_map.e_width = -1;
+        game_map.e_height = -1;
+        game_map.e_width = -1;
         FILE *game_file = fopen(config.path_initial_map, "r");
         if (game_file == NULL)
         {
@@ -120,7 +135,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
 
         if ((game_map.e_width == -1) || (game_map.e_height == -1))
         {
-            wlog("Map parsing","Width or height not specified");
+            wlog("Map parsing", "Width or height not specified");
             return -1;
         }
 
@@ -140,15 +155,67 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             {
                 render_map(map_win, &game_map);
                 noecho();
+                point dest;
+                int movement_res = 0;
                 c = getch();
                 switch (c)
                 {
                 case 'q':
 
                     break;
-
+                // Movements
+                case 'w':
+                {
+                    dest.x = game_map.hero_pos.x;
+                    dest.y = game_map.hero_pos.y - 1;
+                    movement_res = move_hero(&game_map, &dest);
+                    break;
+                }
+                case 'd':
+                {
+                    dest.x = game_map.hero_pos.x + 1;
+                    dest.y = game_map.hero_pos.y;
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    movement_res = move_hero(&game_map, &dest);
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    wlog_int("dest.x ", dest.x);
+                    wlog_int("dest.y ", dest.y);
+                    break;
+                }
+                case 's':
+                {
+                    dest.x = game_map.hero_pos.x;
+                    dest.y = game_map.hero_pos.y + 1;
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    movement_res = move_hero(&game_map, &dest);
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    wlog_int("dest.x ", dest.x);
+                    wlog_int("dest.y ", dest.y);
+                    break;
+                }
+                case 'a':
+                {
+                    dest.x = game_map.hero_pos.x - 1;
+                    dest.y = game_map.hero_pos.y;
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    movement_res = move_hero(&game_map, &dest);
+                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
+                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
+                    wlog_int("dest.x ", dest.x);
+                    wlog_int("dest.y ", dest.y);
+                    break;
+                }
                 default:
                     break;
+                }
+                if (movement_res == -1)
+                {
+                    c = 'q';
                 }
             } while (c != 'q');
 

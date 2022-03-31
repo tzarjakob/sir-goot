@@ -4,6 +4,7 @@
 
 #include "parser.h"
 #include "data.h"
+#include "log.h"
 
 int get_next_number(FILE *src)
 {
@@ -377,6 +378,9 @@ int parser_map(FILE *src, game_map_t *map)
                 {
                     map->starting_point.x = x;
                     map->starting_point.y = y;
+                    map->hero_pos.x = map->starting_point.x;
+                    map->hero_pos.y = map->starting_point.y;
+                    add_to_map_point(map, HERO_P, x, y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
