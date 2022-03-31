@@ -6,7 +6,6 @@
 #include <string.h>
 
 
-
 int main()
 {
     initscr();

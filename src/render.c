@@ -232,19 +232,14 @@ void main_screen(const int WIDTH, const int HEIGHT)
         c = getch();
         switch (c)
         {
-        case 'i':
-            break;
-        case 'a':
-            break;
         case 'l':
         {
             char path[BUFFERSIZE] = "data/jakob/config.gigi";
             int res = game_loop(path, WIDTH, HEIGHT);
             break;
         }
-        case 's':
-            break;
         case 'q':
+            // quitting...
             break;
         default:
             break;
