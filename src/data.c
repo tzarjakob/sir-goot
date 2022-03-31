@@ -28,6 +28,10 @@ int init_gmt(game_map_t *map, int width, int height)
     for (int i = 0; i < height; i++)
     {
         (map->data)[i] = (unsigned char *)malloc(width * sizeof(unsigned char));
+        for(int j=0; j<width; j++)
+        {
+            map->data[i][j] = 0;
+        }
     }
     return 0;
 }

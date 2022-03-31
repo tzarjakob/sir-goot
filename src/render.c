@@ -8,21 +8,22 @@
 void render_pixel(WINDOW *win, unsigned char c, int width, int height)
 {
     // switch type
+    width++; height++;
     switch (c)
     {
     case WALL_T:
     {
-        mvwprintw(win, height + 1, width + 1, "#");
+        mvwprintw(win, height, width, "#");
         break;
     }
     case BOUNCING_T:
     {
-        mvwprintw(win, height + 1, width + 1, "=");
+        mvwprintw(win, height, width, "=");
         break;
     }
     case TRAP_T:
     {
-        mvwprintw(win, height + 1, width + 1, "&");
+        mvwprintw(win, height, width, "&");
         break;
     }
     default:
@@ -77,8 +78,6 @@ int load_config(const char *path, config_t *game_config)
 
 int load_game_map_s(FILE *game_file, game_map_t *game_map)
 {
-    // pars the file into the map object
-    //
     int pars_map_res = parser_map(game_file, game_map);
     switch (pars_map_res)
     {
@@ -98,13 +97,6 @@ int load_game_map_s(FILE *game_file, game_map_t *game_map)
         wlog("Config file", "Some errors... ");
         break;
     }
-    /*
-    INITIALIZATION IN THE PARSER
-    if (init_gmt(&map, width, height) == -1)
-    {
-        wlog("Game initialization", "Failed initialization of map\n");
-        return -1;
-    } */
     return pars_map_res;
 }
 
@@ -116,6 +108,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     if (p_conf_res == BUFFER_END)
     {
         game_map_t game_map;
+        game_map.e_height = -1; game_map.e_width = -1;
         FILE *game_file = fopen(config.path_initial_map, "r");
         if (game_file == NULL)
         {
@@ -124,6 +117,12 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
         }
         int pars_map_res = load_game_map_s(game_file, &game_map);
         fclose(game_file);
+
+        if ((game_map.e_width == -1) || (game_map.e_height == -1))
+        {
+            wlog("Map parsing","Width or height not specified");
+            return -1;
+        }
 
         if (pars_map_res == BUFFER_END)
         {
