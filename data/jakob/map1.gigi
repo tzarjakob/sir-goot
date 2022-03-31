@@ -1,0 +1,5 @@
+(* Questa e' la prima mappa che si deve caricare *)
+$ height 20
+$ width 50 
+$ start_p x=2 y=5
+$ end_p x=45 y=10

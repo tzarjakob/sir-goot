@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include "aux.h"
 #include "data.h"
+#include "parser.h"
+#include <string.h>
 
 #define TEST_MEM FALSE
 
@@ -11,17 +13,17 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     {
     case WALL_T:
     {
-        mvwprintw(win, height, width, "#");
+        mvwprintw(win, height + 1, width + 1, "#");
         break;
     }
     case BOUNCING_T:
     {
-        mvwprintw(win, height, width, "=");
+        mvwprintw(win, height + 1, width + 1, "=");
         break;
     }
     case TRAP_T:
     {
-        mvwprintw(win, height, width, "&");
+        mvwprintw(win, height + 1, width + 1, "&");
         break;
     }
     default:
@@ -39,68 +41,125 @@ void render_map(WINDOW *win, game_map_t *map)
         }
     }
     wrefresh(win);
-    refresh();
 }
 
-int game_loop(int WIDTH, int HEIGHT)
+int load_config(const char *path, config_t *game_config)
 {
-    clear();
-    game_map_t map;
-    int width = 6;
-    int height = 4;
-    WINDOW *map_win = newwin(height+1, width+1, ((HEIGHT/2) - (height/2)), ((WIDTH/2) - (width/2)));
-    box(map_win, 0, 0);
-    wrefresh(map_win);
-    refresh();
-    if (init_gmt(&map, width, height) == -1)
+    FILE *config = fopen(path, "r");
+    int pars_conf_res = parser_config_file(config, game_config);
+    switch (pars_conf_res)
     {
-        wlog("Failed initialization of map\n");
-        return -1;
+    case LEXICAL_ERROR:
+        wlog("Config file", "LEXICAL_ERROR");
+        break;
+    case SYNTAX_ERROR:
+        wlog("Config file", "SYNTAX_ERROR");
+        break;
+    case SEMANTICAL_ERROR:
+        wlog("Config file", "SEMANTICAL_ERROR");
+        break;
+    case BUFFER_END:
+        // ok
+        break;
+    default:
+        wlog("Config file", "Some errors... ");
+        break;
     }
+    fclose(config);
+    return pars_conf_res;
+}
+
+int load_game_map_s(FILE *game_file, game_map_t *game_map)
+{
     // pars the file into the map object
     //
-    map.data[0][2] = WALL_T;
-    map.data[0][3] = WALL_T;
-    map.data[0][4] = WALL_T;
-    map.data[1][4] = WALL_T;
-    map.data[2][4] = WALL_T;
-    map.data[3][4] = WALL_T;
-    map.data[3][3] = BOUNCING_T;
-    map.data[2][3] = BOUNCING_T;
-
-    char c;
-    do
+    int pars_map_res = parser_map(game_file, game_map);
+    switch (pars_map_res)
     {
-        // render_map(map_win, &map);
-        noecho();
-        c = getch();
-        switch (c)
+    case LEXICAL_ERROR:
+        wlog("Config file", "LEXICAL_ERROR");
+        break;
+    case SYNTAX_ERROR:
+        wlog("Config file", "SYNTAX_ERROR");
+        break;
+    case SEMANTICAL_ERROR:
+        wlog("Config file", "SEMANTICAL_ERROR");
+        break;
+    case BUFFER_END:
+        // ok
+        break;
+    default:
+        wlog("Config file", "Some errors... ");
+        break;
+    }
+    /*
+    INITIALIZATION IN THE PARSER
+    if (init_gmt(&map, width, height) == -1)
+    {
+        wlog("Game initialization", "Failed initialization of map\n");
+        return -1;
+    } */
+    return pars_map_res;
+}
+
+int game_loop(const char *path, int WIDTH, int HEIGHT)
+{
+    clear();
+    config_t config;
+    int p_conf_res = load_config(path, &config);
+    if (p_conf_res != 1)
+    {
+        game_map_t game_map;
+        FILE *game_file = fopen(config.path_initial_map, "r");
+        int pars_map_res = load_game_map_s(game_file, &game_map);
+        fclose(game_file);
+
+        if (pars_map_res != 1)
         {
-        case 'q':
+            // 3. adjust the size of this window
+            WINDOW *map_win = newwin(game_map.e_height + 2,
+                                     game_map.e_width + 2,
+                                     ((HEIGHT / 2) - (game_map.e_height / 2)),
+                                     ((WIDTH / 2) - (game_map.e_width / 2)));
+            refresh();
+            box(map_win, 0, 0);
+            wrefresh(map_win);
 
-            break;
+            char c;
+            do
+            {
+                render_map(map_win, &game_map);
+                noecho();
+                c = getch();
+                switch (c)
+                {
+                case 'q':
 
-        default:
-            break;
+                    break;
+
+                default:
+                    break;
+                }
+            } while (c != 'q');
+
+            delwin(map_win);
+            deinit_gmt(&game_map);
         }
-    } while (c != 'q');
-
-    delwin(map_win);
-    deinit_gmt(&map, width, height);
+    }
+    return 1;
 }
 
 // receives as input the specific game to play and tells the function game_loop what is the first map to load
-int load_map_option(int WIDTH, int HEIGHT)
+void load_map_option(char *path)
 {
-    int res = game_loop(WIDTH, HEIGHT);
-    return res;
+    strcpy(path, "/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/config.gigi");
 }
 
 void render_main_screen(const int WIDTH, const int HEIGHT)
 {
     int line = 4;
     mvwprintw_center(stdscr, line++, WIDTH, "This is the main screen");
-    mvwprintw_center(stdscr, line++, WIDTH, "Press a to load a game");
+    mvwprintw_center(stdscr, line++, WIDTH, "Press l to load a game");
     mvwprintw_center(stdscr, line++, WIDTH, "Press q to quit");
 }
 
@@ -121,10 +180,12 @@ void main_screen(const int WIDTH, const int HEIGHT)
             break;
         case 'l':
         {
-            if (load_map_option(WIDTH, HEIGHT) == -1)
-            {
-                wlog("Error in initializing the game\n");
-            }
+            char path[BUFFER_LEN];
+            load_map_option(path);
+            int res = game_loop(path, WIDTH, HEIGHT);
+            char res_str[BUFFER_LEN];
+            sprintf(res_str, "%d", res);
+            wlog("Game loop retval", res_str);
             break;
         }
         case 's':
@@ -143,6 +204,7 @@ void main_screen(const int WIDTH, const int HEIGHT)
 int main()
 {
     initscr();
+    curs_set(0);
     game_map_t map_game;
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
@@ -173,7 +235,6 @@ int main()
         printf("Allocazione!\n");
         deinit_gmt(&map, width, height);
         printf("Deallocazione!\n");
-
     }
     return 0;
 }
