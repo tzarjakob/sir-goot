@@ -1,32 +1,29 @@
 #ifndef DATA_H
 #define DATA_H
 
-#define BUFFER_LEN 100
 #define MAX_WIDTH 200
 #define MAX_HEIGHT 50
 
-#define WALL_T 1
-#define BOUNCING_T 2
-#define TRAP_T 3
-#define STARTING_P 4
-#define ENDING_P 5
-#define HERO_P 6
+// data types in the map
+#define WALL_T (unsigned char)1
+#define BOUNCING_T (unsigned char)2
+#define TRAP_T (unsigned char)3
+#define STARTING_P (unsigned char)4
+#define ENDING_P (unsigned char)5
+#define HERO_P (unsigned char)6
 
-#define LEXICAL_ERROR 1
-#define SYNTAX_ERROR 2
-#define SEMANTICAL_ERROR 3
-#define BUFFER_END 4
+// return values of parsing functions
+#define BUFFER_END 1
+#define LEXICAL_ERROR 2
+#define SYNTAX_ERROR 3
+#define SEMANTICAL_ERROR 4
 
-#define NOT_VALID_CHAR -2
 #define NUMBER_NOT_FOUND -1
 
 #define BUFFERSIZE 100
 
-#define MODE_PARSER 1
-
 #include <stdlib.h>
 #include <stdio.h>
-
 
 typedef struct
 {
@@ -36,7 +33,7 @@ typedef struct
 
 typedef struct
 {
-    char path_initial_map[BUFFER_LEN];
+    char path_initial_map[BUFFERSIZE];
 
 } config_t;
 

@@ -91,7 +91,7 @@ int move_hero(game_map_t *game_map, point *dest)
         }
         else
         {
-            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;
+            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;            
             game_map->data[dest->y][dest->x] = HERO_P;
             game_map->hero_pos.x = dest->x;
             game_map->hero_pos.y = dest->y;

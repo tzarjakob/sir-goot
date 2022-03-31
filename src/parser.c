@@ -14,47 +14,23 @@ int get_next_number(FILE *src)
     int FOUND = 0;
     while (!FOUND)
     {
-        // printf("res = %d\n", result);
         c_curr = (char)fgetc(src);
-        if (c_curr == EOF)
-        {
-            return NUMBER_NOT_FOUND;
-        }
+        if (c_curr == EOF) { return NUMBER_NOT_FOUND; }
         else if (c_curr >= '0' && c_curr <= '9')
         {
             FOUND = 1;
             result += (int)(c_curr - '0');
-            // printf("res = %d\n", result);
-            // NEW WORD!!!
             int end_of_word = 0;
             while (!end_of_word)
             {
                 c_curr = (char)fgetc(src);
-                if (c_curr == EOF || c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ')
-                {
-                    // end of numer
-                    end_of_word = 1;
-                }
-                else if (c_curr >= '0' && c_curr <= '9')
-                {
-                    result = (result * 10) + ((int)c_curr - '0');
-                    // printf("res = %d\n", result);
-                }
-                else
-                {
-                    // not valid character
-                    return NOT_VALID_CHAR;
-                }
+                if (c_curr == EOF || c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ') { end_of_word = 1; }
+                else if (c_curr >= '0' && c_curr <= '9') { result = (result * 10) + ((int)c_curr - '0'); }
+                else { return NUMBER_NOT_FOUND; }
             }
         }
-        else if (c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ')
-        {
-            // PASS THIS CHARACTERS...
-        }
-        else
-        {
-            return NOT_VALID_CHAR;
-        }
+        else if (c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ') { }
+        else { return NUMBER_NOT_FOUND; }
     }
     return result;
 }
@@ -62,7 +38,6 @@ int get_next_number(FILE *src)
 char *get_next_word(FILE *src)
 {
     char *next_word = (char *)malloc(BUFFERSIZE * sizeof(char));
-
     char c_curr;
     int FOUND = 0;
     while (!FOUND)
@@ -78,8 +53,6 @@ char *get_next_word(FILE *src)
                  (c_curr >= '0' && c_curr <= '9'))
         {
             FOUND = 1;
-            // NEW WORD!!!
-            // printf("%c", c_curr);
             int end_of_word = 0;
             int len = 0;
             next_word[len] = c_curr;
@@ -87,10 +60,8 @@ char *get_next_word(FILE *src)
             while (!end_of_word)
             {
                 c_curr = (char)fgetc(src);
-                // printf("%c", c_curr);
                 if (c_curr == EOF || c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ')
                 {
-                    // printf("\nSIAMO QUA\n");
                     end_of_word = 1;
                     next_word[len] = '\0';
                     return next_word;
@@ -111,17 +82,13 @@ char *get_next_word(FILE *src)
                 }
             }
         }
-        else if (c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ')
-        {
-            // PASS THIS CHARACTERS...
-        }
+        else if (c_curr == '\n' || c_curr == '\t' || c_curr == '\r' || c_curr == ' ') { }
         else
         {
             free(next_word);
             return NULL;
         }
     }
-
     return next_word;
 }
 
@@ -137,11 +104,7 @@ int get_attribute(FILE *src)
     {
         char *attr_val = strchr(next_word, '=');
         // examples of attr_val -> "=321" or "=-21.321" or "=pippo"
-        if (strlen(attr_val) < 2)
-        {
-            // only the = character is not allowed
-            SIGNAL = SYNTAX_ERROR;
-        }
+        if (strlen(attr_val) < 2) { SIGNAL = SYNTAX_ERROR; }
         else
         {
             attr_val = attr_val + (sizeof(char));

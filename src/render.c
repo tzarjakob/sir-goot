@@ -38,7 +38,6 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         mvwprintw(win, height, width, "8");
         break;
     }
-
     default:
     {
         mvwprintw(win, height, width, " ");
@@ -59,7 +58,7 @@ void render_map(WINDOW *win, game_map_t *map)
     wrefresh(win);
 }
 
-int load_config(const char *path, config_t *game_config)
+int load_game_config_from_file(const char *path, config_t *game_config)
 {
     FILE *config = fopen(path, "r");
     if (config == NULL)
@@ -90,7 +89,7 @@ int load_config(const char *path, config_t *game_config)
     return pars_conf_res;
 }
 
-int load_game_map_s(FILE *game_file, game_map_t *game_map)
+int load_game_map_from_file(FILE *game_file, game_map_t *game_map)
 {
     int pars_map_res = parser_map(game_file, game_map);
     switch (pars_map_res)
@@ -118,7 +117,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
 {
     clear();
     config_t config;
-    int p_conf_res = load_config(path, &config);
+    int p_conf_res = load_game_config_from_file(path, &config);
     if (p_conf_res == BUFFER_END)
     {
         game_map_t game_map;
@@ -130,7 +129,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             wlog("File opening", "Failed to open game_file from path of config type");
             return -1;
         }
-        int pars_map_res = load_game_map_s(game_file, &game_map);
+        int pars_map_res = load_game_map_from_file(game_file, &game_map);
         fclose(game_file);
 
         if ((game_map.e_width == -1) || (game_map.e_height == -1))
@@ -175,39 +174,21 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 {
                     dest.x = game_map.hero_pos.x + 1;
                     dest.y = game_map.hero_pos.y;
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
                     movement_res = move_hero(&game_map, &dest);
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
-                    wlog_int("dest.x ", dest.x);
-                    wlog_int("dest.y ", dest.y);
                     break;
                 }
                 case 's':
                 {
                     dest.x = game_map.hero_pos.x;
                     dest.y = game_map.hero_pos.y + 1;
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
                     movement_res = move_hero(&game_map, &dest);
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
-                    wlog_int("dest.x ", dest.x);
-                    wlog_int("dest.y ", dest.y);
                     break;
                 }
                 case 'a':
                 {
                     dest.x = game_map.hero_pos.x - 1;
                     dest.y = game_map.hero_pos.y;
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
                     movement_res = move_hero(&game_map, &dest);
-                    wlog_int("game_map.hero_pos.x ", game_map.hero_pos.x);
-                    wlog_int("game_map.hero_pos.y ", game_map.hero_pos.y);
-                    wlog_int("dest.x ", dest.x);
-                    wlog_int("dest.y ", dest.y);
                     break;
                 }
                 default:
@@ -227,9 +208,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
 }
 
 // receives as input the specific game to play and tells the function game_loop what is the first map to load
-void load_map_option(char *path)
+void enter_game_path(char *path)
 {
-    strcpy(path, "/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/config.gigi");
+    strcpy(path, "data/jakob/config.gigi");
 }
 
 void render_main_screen(const int WIDTH, const int HEIGHT)
@@ -257,22 +238,15 @@ void main_screen(const int WIDTH, const int HEIGHT)
             break;
         case 'l':
         {
-            wlog("main screen", "pressed l");
-            char path[BUFFER_LEN] = "/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/config.gigi";
-            // load_map_option(path);
+            char path[BUFFERSIZE] = "data/jakob/config.gigi";
             int res = game_loop(path, WIDTH, HEIGHT);
-            char res_str[BUFFER_LEN];
-            sprintf(res_str, "%d", res);
-            wlog("Game loop retval", res_str);
             break;
         }
         case 's':
             break;
         case 'q':
-            // quitting
             break;
         default:
-            // log()
             break;
         }
     } while (c != 'q');

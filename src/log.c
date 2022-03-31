@@ -6,7 +6,7 @@
 
 int wlog(const char *topic, const char *text)
 {
-    FILE *log_file = fopen("/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/log/main.log", "a");
+    FILE *log_file = fopen("log/main.log", "a");
     if (log_file < 0)
     {
         return -1;
@@ -17,7 +17,7 @@ int wlog(const char *topic, const char *text)
 }
 int wlog_int(const char *topic, int x)
 {
-    FILE *log_file = fopen("/home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/log/main.log", "a");
+    FILE *log_file = fopen("log/main.log", "a");
     if (log_file < 0)
     {
         return -1;
