@@ -358,12 +358,25 @@ int parser_map(FILE *src, game_map_t *map)
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
             }
+            else if (strcmp(ob_name, "trap") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, TRAP_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
             else if (strcmp(ob_name, "start_p") == 0)
             {
                 int x = get_next_number(src);
                 int y = get_next_number(src);
                 if (x != -1 && y != -1)
                 {
+                    map->starting_point.x = x;
+                    map->starting_point.y = y;
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
@@ -374,9 +387,24 @@ int parser_map(FILE *src, game_map_t *map)
                 int y = get_next_number(src);
                 if (x != -1 && y != -1)
                 {
+                    map->ending_point.x = x;
+                    map->ending_point.y = y;
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "next_map") == 0)
+            {
+                char *path = get_next_word(src);
+                if (path == NULL)
+                {
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+                }
+                else
+                {
+                    strcpy(map->next_map, path);
+                    free(path);
+                }
             }
             else
             {

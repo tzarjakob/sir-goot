@@ -3,5 +3,6 @@ $ dimensions 40 15
 $ start_p 2 5
 $ end_p 45 10 
 $ wall 2 3 6 6 
-
+$ trap 23 12
+$ next_map /home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/map2.gigi
 

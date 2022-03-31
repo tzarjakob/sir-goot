@@ -16,9 +16,7 @@ int main()
     game_map_t map_game;
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
-    // printw("WIDTH=%d, HEIGHT=%d", WIDTH, HEIGHT);
     main_screen(WIDTH, HEIGHT);
-    // getch();
     endwin();
 
     return 0;

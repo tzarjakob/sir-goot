@@ -11,6 +11,18 @@
 #define STARTING_P  4
 #define ENDING_P    5
 
+#define LEXICAL_ERROR     1
+#define SYNTAX_ERROR      2
+#define SEMANTICAL_ERROR  3
+#define BUFFER_END        4
+
+#define NOT_VALID_CHAR   -2
+#define NUMBER_NOT_FOUND  -1
+
+#define BUFFERSIZE        100
+
+#define MODE_PARSER       1
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -30,7 +42,7 @@ typedef struct {
     int e_width; int e_height;
     point starting_point; 
     point ending_point;
-    // also it is convenient to have all the elements separately...
+    char next_map[BUFFERSIZE];
 } game_map_t;
 
 // rows = height
@@ -38,6 +50,7 @@ typedef struct {
 int init_gmt(game_map_t* map, int width, int height);
 int deinit_gmt(game_map_t*);
 int add_to_map_rect(game_map_t* game_map, unsigned char type, int tlx, int tly, int brx, int bry);
+int add_to_map_point(game_map_t* game_map, unsigned char type, int x, int y);
 
 
 
