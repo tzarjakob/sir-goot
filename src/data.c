@@ -58,7 +58,7 @@ int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, 
     {
         for (int i = tly; i < bry; ++i)
         {
-            for (int j = tlx; j < bry; ++j)
+            for (int j = tlx; j < brx; ++j)
             {
                 game_map->data[i][j] = type;
             }

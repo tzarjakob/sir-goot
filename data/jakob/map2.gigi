@@ -1,0 +1,14 @@
+(* Questa e' la prima mappa che si deve caricare *)
+$ dimensions 120 25
+$ start_p 5 2
+$ end_p 2 2
+$ wall 20 0 21 18
+(* 
+
+$ wall 20 18 50 19
+$ wall 60 10 80 15
+$ wall 70 18 71 25 
+$ wall 90 0 91 22 
+*) 
+
+$ next_map /home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/map2.gigi
