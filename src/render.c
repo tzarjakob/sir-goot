@@ -48,6 +48,7 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
 
 void render_map(WINDOW *win, game_map_t *map)
 {
+    // TODO this is quite inefficient: find an alternative way to implement it
     for (int i = 0; i < map->e_height; ++i)
     {
         for (int j = 0; j < map->e_width; ++j)
@@ -140,7 +141,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
 
         if (pars_map_res == BUFFER_END)
         {
-            // 3. adjust the size of this window
             WINDOW *map_win = newwin(game_map.e_height + 2,
                                      game_map.e_width + 2,
                                      ((HEIGHT / 2) - (game_map.e_height / 2)),
