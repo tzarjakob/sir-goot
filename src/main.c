@@ -111,6 +111,11 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     {
         game_map_t game_map;
         FILE *game_file = fopen(config.path_initial_map, "r");
+        if(game_file == NULL) 
+        {
+            wlog("File opening", "Failed to open game_file from path of config type");
+            return -1;
+        }
         int pars_map_res = load_game_map_s(game_file, &game_map);
         fclose(game_file);
 

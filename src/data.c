@@ -35,4 +35,19 @@ int deinit_gmt(game_map_t* t){
     free(t->data);
 }
 
+// returns 1 if everything went ok, else returns -1
+int add_to_map(game_map_t* game_map, int tlx, int tly, int brx, int bry)
+{
+    int retval = 1;
+    // checks
+    if (game_map->e_height < bry || game_map->e_width < brx)
+    {
+        retval = -1;
+    } else 
+    {
+        
+    }
+    return retval;
+}
+
 
