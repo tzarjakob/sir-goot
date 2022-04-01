@@ -35,7 +35,12 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     }
     case HERO_P:
     {
-        mvwprintw(win, height, width, "8");
+        mvwprintw(win, height, width, "?");
+        break;
+    }
+    case ENDING_P:
+    {
+        mvwprintw(win, height, width, "!");
         break;
     }
     default:
@@ -131,46 +136,66 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
     return movement_res;
 }
 
+// return 1 if everything went ok, -1 otherwise
+int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const int WIDTH, const int HEIGHT)
+{
+    int retval = 1;
+    game_map->e_height = -1;
+    game_map->e_width = -1;
+    FILE *game_file = fopen(path, "r");
+    if (game_file == NULL)
+    {
+        wlog("File opening", "Failed to open game_file from path of config type");
+        retval = -1;
+    }
+    else
+    {
+        int pars_map_res = load_game_map_from_file(game_file, game_map);
+        fclose(game_file);
+
+        if ((game_map->e_width == -1) || (game_map->e_height == -1))
+        {
+            wlog("Map parsing", "Width or height not specified");
+            retval = -1;
+        }
+        else if (pars_map_res != BUFFER_END)
+        {
+            map_win = newwin(game_map->e_height + 2,
+                             game_map->e_width + 2,
+                             ((HEIGHT / 2) - (game_map->e_height / 2)),
+                             ((WIDTH / 2) - (game_map->e_width / 2)));
+            refresh();
+            box(map_win, 0, 0);
+            wrefresh(map_win);
+
+            render_map(map_win, game_map);
+        }
+        else
+        {
+            retval = -1;
+        }
+    }
+    return retval;
+}
+
 int game_loop(const char *path, int WIDTH, int HEIGHT)
 {
+    int retval = 0;
     clear();
     config_t config;
     int p_conf_res = load_game_config_from_file(path, &config);
     if (p_conf_res == BUFFER_END)
     {
+        WINDOW *map_win;
         game_map_t game_map;
-        game_map.e_height = -1;
-        game_map.e_width = -1;
-        FILE *game_file = fopen(config.path_initial_map, "r");
-        if (game_file == NULL)
+        if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
         {
-            wlog("File opening", "Failed to open game_file from path of config type");
-            return -1;
-        }
-        int pars_map_res = load_game_map_from_file(game_file, &game_map);
-        fclose(game_file);
-
-        if ((game_map.e_width == -1) || (game_map.e_height == -1))
-        {
-            wlog("Map parsing", "Width or height not specified");
-            return -1;
-        }
-
-        if (pars_map_res == BUFFER_END)
-        {
-            WINDOW *map_win = newwin(game_map.e_height + 2,
-                                     game_map.e_width + 2,
-                                     ((HEIGHT / 2) - (game_map.e_height / 2)),
-                                     ((WIDTH / 2) - (game_map.e_width / 2)));
-            refresh();
-            box(map_win, 0, 0);
-            wrefresh(map_win);
-
             char c;
-            render_map(map_win, &game_map);
+            // nodelay(map_win, TRUE);
             do
             {
                 noecho();
+                // timeout(1000);
                 point dest;
                 point start;
                 int movement_res = 0;
@@ -184,41 +209,69 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 case 'w':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                        game_map.hero_pos.x, game_map.hero_pos.y - 1);
+                                                    game_map.hero_pos.x, game_map.hero_pos.y - 1);
                     break;
                 }
                 case 'd':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                        game_map.hero_pos.x + 1, game_map.hero_pos.y);
+                                                    game_map.hero_pos.x + 1, game_map.hero_pos.y);
                     break;
                 }
                 case 's':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                        game_map.hero_pos.x, game_map.hero_pos.y + 1);
+                                                    game_map.hero_pos.x, game_map.hero_pos.y + 1);
                     break;
                 }
                 case 'a':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                        game_map.hero_pos.x - 1, game_map.hero_pos.y);
+                                                    game_map.hero_pos.x - 1, game_map.hero_pos.y);
                     break;
                 }
                 default:
                     break;
                 }
-                if (movement_res == -1)
+                // it would be significantly better if we could verify the current position of the hero
+                switch (movement_res)
                 {
+                case -1:
                     c = 'q';
+                    break;
+                case -2:
+                {
+                    if (strcmp(game_map.next_map, "_"))
+                    {
+                        mvwprintw_center(map_win, 6, WIDTH, "HAI VINTO");
+                        wrefresh(map_win);
+                    }
+                    else
+                    {
+                        char new_path_map[BUFFERSIZE];
+                        strcpy(new_path_map, game_map.next_map);
+                        delwin(map_win);
+                        deinit_gmt(&game_map);
+                        load_game_map(map_win, &game_map, new_path_map, WIDTH, HEIGHT);
+                    }
+                    break;
+                }
                 }
             } while (c != 'q');
 
             delwin(map_win);
             deinit_gmt(&game_map);
         }
+        else 
+        {
+            retval = -1;
+        }
     }
-    return 1;
+    else
+    {
+        retval = -1;
+    }
+    return retval;
 }
 
 // receives as input the specific game to play and tells the function game_loop what is the first map to load
@@ -230,6 +283,7 @@ void enter_game_path(char *path)
 void render_main_screen(const int WIDTH, const int HEIGHT)
 {
     int line = 4;
+    box(stdscr, 0, 0);
     mvwprintw_center(stdscr, line++, WIDTH, "This is the main screen");
     mvwprintw_center(stdscr, line++, WIDTH, "Press l to load a game");
     mvwprintw_center(stdscr, line++, WIDTH, "Press q to quit");

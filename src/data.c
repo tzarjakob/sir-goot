@@ -69,7 +69,7 @@ int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y)
     return retval;
 }
 
-// return 0 if not possible, return 1 if possible, return -1 if dead
+// return 0 if not possible, return 1 if possible, return -2 if wins, return -1 if dead
 int move_hero(game_map_t *game_map, point *dest)
 {
     int retval = 0;
@@ -84,6 +84,8 @@ int move_hero(game_map_t *game_map, point *dest)
         if (c == TRAP_T)
         {
             retval = -1;
+        } else if (c == ENDING_P) {
+            retval = -2;
         }
         else if (c != 0)
         {

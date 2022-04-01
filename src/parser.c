@@ -356,6 +356,7 @@ int parser_map(FILE *src, game_map_t *map)
                 {
                     map->ending_point.x = x;
                     map->ending_point.y = y;
+                    add_to_map_point(map, ENDING_P, x, y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
