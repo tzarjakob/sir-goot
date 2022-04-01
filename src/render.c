@@ -48,7 +48,6 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
 
 void render_map(WINDOW *win, game_map_t *map)
 {
-    // TODO this is quite inefficient: find an alternative way to implement it
     for (int i = 0; i < map->e_height; ++i)
     {
         for (int j = 0; j < map->e_width; ++j)
@@ -114,6 +113,24 @@ int load_game_map_from_file(FILE *game_file, game_map_t *game_map)
     return pars_map_res;
 }
 
+int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest_y)
+{
+    point dest;
+    dest.x = dest_x;
+    dest.y = dest_y;
+    point source;
+    source.x = game_map->hero_pos.x;
+    source.y = game_map->hero_pos.y;
+    int movement_res = move_hero(game_map, &dest);
+    if (movement_res == 1)
+    {
+        render_pixel(map_win, HERO_P, dest.x, dest.y);
+        render_pixel(map_win, 0, source.x, source.y);
+        wrefresh(map_win);
+    }
+    return movement_res;
+}
+
 int game_loop(const char *path, int WIDTH, int HEIGHT)
 {
     clear();
@@ -150,11 +167,12 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             wrefresh(map_win);
 
             char c;
+            render_map(map_win, &game_map);
             do
             {
-                render_map(map_win, &game_map);
                 noecho();
                 point dest;
+                point start;
                 int movement_res = 0;
                 c = getch();
                 switch (c)
@@ -165,30 +183,26 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // Movements
                 case 'w':
                 {
-                    dest.x = game_map.hero_pos.x;
-                    dest.y = game_map.hero_pos.y - 1;
-                    movement_res = move_hero(&game_map, &dest);
+                    movement_res = handle_movements(map_win, &game_map,
+                                                        game_map.hero_pos.x, game_map.hero_pos.y - 1);
                     break;
                 }
                 case 'd':
                 {
-                    dest.x = game_map.hero_pos.x + 1;
-                    dest.y = game_map.hero_pos.y;
-                    movement_res = move_hero(&game_map, &dest);
+                    movement_res = handle_movements(map_win, &game_map,
+                                                        game_map.hero_pos.x + 1, game_map.hero_pos.y);
                     break;
                 }
                 case 's':
                 {
-                    dest.x = game_map.hero_pos.x;
-                    dest.y = game_map.hero_pos.y + 1;
-                    movement_res = move_hero(&game_map, &dest);
+                    movement_res = handle_movements(map_win, &game_map,
+                                                        game_map.hero_pos.x, game_map.hero_pos.y + 1);
                     break;
                 }
                 case 'a':
                 {
-                    dest.x = game_map.hero_pos.x - 1;
-                    dest.y = game_map.hero_pos.y;
-                    movement_res = move_hero(&game_map, &dest);
+                    movement_res = handle_movements(map_win, &game_map,
+                                                        game_map.hero_pos.x - 1, game_map.hero_pos.y);
                     break;
                 }
                 default:

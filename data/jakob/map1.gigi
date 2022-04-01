@@ -1,4 +1,4 @@
-(* Questa e' la prima mappa che si deve caricare *)
+(* First map to load *)
 $ dimensions 120 25
 $ start_p 5 2
 $ end_p 2 2
@@ -11,4 +11,4 @@ $ trap 30 5
 $ trap 30 10
 $ trap 50 8
 
-$ next_map /home/tzarjakob/TzarJakob/CS_PROGETTI/NCURSES_GAME/render/data/jakob/map2.gigi
+$ next_map data/jakob/map2.gigi
