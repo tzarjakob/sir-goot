@@ -137,7 +137,7 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
 }
 
 // return 1 if everything went ok, -1 otherwise
-int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const int WIDTH, const int HEIGHT)
+int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path)
 {
     int retval = 1;
     game_map->e_height = -1;
@@ -160,14 +160,7 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const
         }
         else if (pars_map_res == BUFFER_END)
         {
-            map_win = newwin(game_map->e_height + 2,
-                             game_map->e_width + 2,
-                             ((HEIGHT / 2) - (game_map->e_height / 2)),
-                             ((WIDTH / 2) - (game_map->e_width / 2)));
-            refresh();
-            box(map_win, 0, 0);
-            wrefresh(map_win);
-            render_map(map_win, game_map);
+            retval = 1;
         }
         else
         {
@@ -181,7 +174,7 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const
 
 int game_loop(const char *path, int WIDTH, int HEIGHT)
 {
-    int retval = 0;
+    int retval = 1;
     clear();
     config_t config;
     int p_conf_res = load_game_config_from_file(path, &config);
@@ -189,8 +182,16 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     {
         WINDOW *map_win;
         game_map_t game_map;
-        if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
+        if (load_game_map(map_win, &game_map, config.path_initial_map) == 1)
         {
+            map_win = newwin(game_map.e_height + 2,
+                             game_map.e_width + 2,
+                             ((HEIGHT / 2) - (game_map.e_height / 2)),
+                             ((WIDTH / 2) - (game_map.e_width / 2)));
+            refresh();
+            box(map_win, 0, 0);
+            wrefresh(map_win);
+            render_map(map_win, &game_map);
             char c;
             do
             {
@@ -202,8 +203,11 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 switch (c)
                 {
                 case 'q':
-
+                {
+                    delwin(map_win);
+                    deinit_gmt(&game_map);
                     break;
+                }
                 // Movements
                 case 'w':
                 {
@@ -236,14 +240,21 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 switch (movement_res)
                 {
                 case -1:
+                {
                     c = 'q';
+
+                    delwin(map_win);
+                    deinit_gmt(&game_map);
                     break;
+                }
                 case -2:
                 {
-                    if (strcmp(game_map.next_map, "_"))
+                    if (strcmp(game_map.next_map, "_") == 0)
                     {
                         mvwprintw_center(map_win, 6, WIDTH, "HAI VINTO");
                         wrefresh(map_win);
+                        delwin(map_win);
+                        deinit_gmt(&game_map);
                     }
                     else
                     {
@@ -251,17 +262,28 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         strcpy(new_path_map, game_map.next_map);
                         delwin(map_win);
                         deinit_gmt(&game_map);
-                        load_game_map(map_win, &game_map, new_path_map, WIDTH, HEIGHT);
+                        if (load_game_map(map_win, &game_map, new_path_map) != 1)
+                        {
+                            c = 'q';
+                        }
+                        else
+                        {
+                            map_win = newwin(game_map.e_height + 2,
+                                             game_map.e_width + 2,
+                                             ((HEIGHT / 2) - (game_map.e_height / 2)),
+                                             ((WIDTH / 2) - (game_map.e_width / 2)));
+                            refresh();
+                            box(map_win, 0, 0);
+                            wrefresh(map_win);
+                            render_map(map_win, &game_map);
+                        }
                     }
                     break;
                 }
                 }
             } while (c != 'q');
-
-            delwin(map_win);
-            deinit_gmt(&game_map);
         }
-        else 
+        else
         {
             retval = -1;
         }
