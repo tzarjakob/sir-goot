@@ -158,7 +158,7 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const
             wlog("Map parsing", "Width or height not specified");
             retval = -1;
         }
-        else if (pars_map_res != BUFFER_END)
+        else if (pars_map_res == BUFFER_END)
         {
             map_win = newwin(game_map->e_height + 2,
                              game_map->e_width + 2,
@@ -167,14 +167,15 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const
             refresh();
             box(map_win, 0, 0);
             wrefresh(map_win);
-
             render_map(map_win, game_map);
         }
         else
         {
+            wlog("Map construction error", "Parsing error");
             retval = -1;
         }
     }
+    wlog_int("Return value construction map", retval);
     return retval;
 }
 
@@ -191,11 +192,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
         if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
         {
             char c;
-            // nodelay(map_win, TRUE);
             do
             {
                 noecho();
-                // timeout(1000);
                 point dest;
                 point start;
                 int movement_res = 0;
