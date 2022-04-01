@@ -4,4 +4,5 @@ $ start_p 5 2
 $ end_p 95 18
 $ wall 20 0 22 18
 
-$ next_map _ 
+$ next_map ___ 
+

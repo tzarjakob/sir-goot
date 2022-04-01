@@ -249,15 +249,17 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 }
                 case -2:
                 {
-                    if (strcmp(game_map.next_map, "_") == 0)
+                    if (strcmp(game_map.next_map, "___") == 0)
                     {
-                        mvwprintw_center(map_win, 6, WIDTH, "HAI VINTO");
-                        wrefresh(map_win);
+                        c = 'q';
                         delwin(map_win);
                         deinit_gmt(&game_map);
+                        clear();
+                        mvwprintw_center(stdscr, 6, WIDTH, "HAI VINTO");
                     }
                     else
                     {
+                        clear();
                         char new_path_map[BUFFERSIZE];
                         strcpy(new_path_map, game_map.next_map);
                         delwin(map_win);

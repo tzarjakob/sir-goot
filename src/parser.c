@@ -50,7 +50,7 @@ char *get_next_word(FILE *src)
         }
         else if ((c_curr >= 'A' && c_curr <= 'Z') ||
                  (c_curr >= 'a' && c_curr <= 'z') || c_curr == '/' ||
-                 (c_curr >= '0' && c_curr <= '9'))
+                 (c_curr >= '0' && c_curr <= '9') || c_curr == '_')
         {
             FOUND = 1;
             int end_of_word = 0;
