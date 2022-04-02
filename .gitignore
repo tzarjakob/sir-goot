@@ -1,5 +1,5 @@
 build/**
 .vscode/**
 list.md 
-log/main.log 
+# log/main.log 
 vgcore*
