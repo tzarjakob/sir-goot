@@ -4,8 +4,12 @@ add_executable(${PROJECT_NAME}
     src/main.c
     src/log.c
     src/data.c
-    src/parser.c
-    src/render.c
+    src/game_logic.c
+    src/parsing/parser.c
+    src/parsing/loading.c 
+    src/parsing/aux.c
+    src/render/screen.c 
+    src/render/movements.c 
 )
 target_link_libraries(${PROJECT_NAME}
     ncurses

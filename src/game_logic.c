@@ -2,121 +2,10 @@
 #include <string.h>
 #include "log.h"
 #include "data.h"
-#include "parser.h"
-#include "render.h"
-
-void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
-{
-    int x = (box_width - strlen(text)) / 2;
-    mvwprintw(win, line, x, text);
-}
-
-void render_pixel(WINDOW *win, unsigned char c, int width, int height)
-{
-    // switch type
-    width++;
-    height++;
-    switch (c)
-    {
-    case WALL_T:
-    {
-        mvwprintw(win, height, width, "#");
-        break;
-    }
-    case BOUNCING_T:
-    {
-        mvwprintw(win, height, width, "=");
-        break;
-    }
-    case TRAP_T:
-    {
-        mvwprintw(win, height, width, "&");
-        break;
-    }
-    case HERO_P:
-    {
-        mvwprintw(win, height, width, "?");
-        break;
-    }
-    case ENDING_P:
-    {
-        mvwprintw(win, height, width, "!");
-        break;
-    }
-    default:
-    {
-        mvwprintw(win, height, width, " ");
-        break;
-    }
-    }
-}
-
-void render_map(WINDOW *win, game_map_t *map)
-{
-    for (int i = 0; i < map->e_height; ++i)
-    {
-        for (int j = 0; j < map->e_width; ++j)
-        {
-            render_pixel(win, map->data[i][j], j, i);
-        }
-    }
-    wrefresh(win);
-}
-
-int load_game_config_from_file(const char *path, config_t *game_config)
-{
-    FILE *config = fopen(path, "r");
-    if (config == NULL)
-    {
-        return -1;
-    }
-    // int pars_conf_res = 2;
-    int pars_conf_res = parser_config_file(config, game_config);
-    switch (pars_conf_res)
-    {
-    case LEXICAL_ERROR:
-        wlog("Config file", "LEXICAL_ERROR");
-        break;
-    case SYNTAX_ERROR:
-        wlog("Config file", "SYNTAX_ERROR");
-        break;
-    case SEMANTICAL_ERROR:
-        wlog("Config file", "SEMANTICAL_ERROR");
-        break;
-    case BUFFER_END:
-        // ok
-        break;
-    default:
-        wlog("Config file", "Some errors... ");
-        break;
-    }
-    fclose(config);
-    return pars_conf_res;
-}
-
-int load_game_map_from_file(FILE *game_file, game_map_t *game_map)
-{
-    int pars_map_res = parser_map(game_file, game_map);
-    switch (pars_map_res)
-    {
-    case LEXICAL_ERROR:
-        wlog("Config file", "LEXICAL_ERROR");
-        break;
-    case SYNTAX_ERROR:
-        wlog("Config file", "SYNTAX_ERROR");
-        break;
-    case SEMANTICAL_ERROR:
-        wlog("Config file", "SEMANTICAL_ERROR");
-        break;
-    case BUFFER_END:
-        // ok
-        break;
-    default:
-        wlog("Config file", "Some errors... ");
-        break;
-    }
-    return pars_map_res;
-}
+#include "parsing/parser.h"
+#include "game_logic.h"
+#include "render/screen.h"
+#include "parsing/loading.h"
 
 int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest_y)
 {
@@ -134,42 +23,6 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
         wrefresh(map_win);
     }
     return movement_res;
-}
-
-// return 1 if everything went ok, -1 otherwise
-int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path)
-{
-    int retval = 1;
-    game_map->e_height = -1;
-    game_map->e_width = -1;
-    FILE *game_file = fopen(path, "r");
-    if (game_file == NULL)
-    {
-        wlog("File opening", "Failed to open game_file from path of config type");
-        retval = -1;
-    }
-    else
-    {
-        int pars_map_res = load_game_map_from_file(game_file, game_map);
-        fclose(game_file);
-
-        if ((game_map->e_width == -1) || (game_map->e_height == -1))
-        {
-            wlog("Map parsing", "Width or height not specified");
-            retval = -1;
-        }
-        else if (pars_map_res == BUFFER_END)
-        {
-            retval = 1;
-        }
-        else
-        {
-            wlog("Map construction error", "Parsing error");
-            retval = -1;
-        }
-    }
-    wlog_int("Return value construction map", retval);
-    return retval;
 }
 
 int game_loop(const char *path, int WIDTH, int HEIGHT)
@@ -298,19 +151,10 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
 }
 
 // receives as input the specific game to play and tells the function game_loop what is the first map to load
-void enter_game_path(char *path)
+/* void enter_game_path(char *path)
 {
     strcpy(path, "data/jakob/config.gigi");
-}
-
-void render_main_screen(const int WIDTH, const int HEIGHT)
-{
-    int line = 4;
-    box(stdscr, 0, 0);
-    mvwprintw_center(stdscr, line++, WIDTH, "This is the main screen");
-    mvwprintw_center(stdscr, line++, WIDTH, "Press l to load a game");
-    mvwprintw_center(stdscr, line++, WIDTH, "Press q to quit");
-}
+} */
 
 void main_screen(const int WIDTH, const int HEIGHT)
 {
@@ -325,6 +169,7 @@ void main_screen(const int WIDTH, const int HEIGHT)
         {
         case 'l':
         {
+            // TODOO add the option to choose which map to play
             char path[BUFFERSIZE] = "data/jakob/config.gigi";
             int res = game_loop(path, WIDTH, HEIGHT);
             break;

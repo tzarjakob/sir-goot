@@ -1,8 +1,7 @@
 #include <ncurses.h>
 #include "log.h"
 #include "data.h"
-#include "parser.h"
-#include "render.h"
+#include "game_logic.h"
 #include <string.h>
 
 
