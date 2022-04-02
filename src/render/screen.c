@@ -31,7 +31,7 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     }
     case HERO_P:
     {
-        mvwprintw(win, height, width, "?");
+        mvwprintw(win, height, width, "X");
         break;
     }
     case ENDING_P:

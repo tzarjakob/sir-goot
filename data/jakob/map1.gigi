@@ -1,8 +1,15 @@
 (* First map to load *)
 $ dimensions 120 25
 $ start_p 5 2
-$ end_p 8 2
+$ end_p 118 23
+
 $ wall 20 0 22 18
+
+(* Wall *)
+$ wall 0 7 10 8 
+$ wall 14 7 20 8
+
+$ wall 0 12 17 13
 $ wall 20 18 50 20
 $ wall 60 10 80 15
 $ wall 70 18 72 25 
