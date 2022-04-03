@@ -96,20 +96,20 @@ int move_hero(game_map_t *game_map, point *dest)
         }
         case KEY_T:
         {
-            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;
+            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
             game_map->data[dest->y][dest->x] = HERO_ID_T;
-            game_map->hero_pos.x = dest->x;
-            game_map->hero_pos.y = dest->y;
+            game_map->hero->pos.x = dest->x;
+            game_map->hero->pos.y = dest->y;
             retval = MOV_POSSIBLE;
-            // add key to hero
+            (game_map->hero->keys)++;
             break;
         }
         case 0:
         {
-            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;
+            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
             game_map->data[dest->y][dest->x] = HERO_ID_T;
-            game_map->hero_pos.x = dest->x;
-            game_map->hero_pos.y = dest->y;
+            game_map->hero->pos.x = dest->x;
+            game_map->hero->pos.y = dest->y;
             retval = MOV_POSSIBLE;
             break;
         }

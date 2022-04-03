@@ -10,7 +10,7 @@ $ wall 0 7 12 8
 $ wall 13 7 20 8
 
 (* first door *)
-(* $ doorh 12 7 *)
+($ doorh 12 7 *)
 
 (* first key *)
 $ key 8 4

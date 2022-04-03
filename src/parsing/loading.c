@@ -4,7 +4,6 @@
 #include "../data.h"
 #include "parser.h"
 
-
 int load_game_config_from_file(const char *path, config_t *game_config)
 {
     FILE *config = fopen(path, "r");
@@ -61,7 +60,7 @@ int load_game_map_from_file(FILE *game_file, game_map_t *game_map)
 }
 
 // return 1 if everything went ok, -1 otherwise
-int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path)
+int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const int WIDTH, const int HEIGHT)
 {
     int retval = 1;
     game_map->e_height = -1;
@@ -82,6 +81,11 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path)
             wlog("Map parsing", "Width or height not specified");
             retval = -1;
         }
+        else if (((game_map->e_height + 4) > HEIGHT) || ((game_map->e_width + 20) > WIDTH))
+        {
+            wlog("Map parsing", "Width or height out of limits");
+            retval = -1;
+        }
         else if (pars_map_res == BUFFER_END)
         {
             retval = 1;
@@ -95,4 +99,3 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path)
     wlog_int("Return value construction map", retval);
     return retval;
 }
-

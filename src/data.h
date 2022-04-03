@@ -30,6 +30,8 @@
 
 #define BUFFERSIZE 100
 
+#define STAT_WIN_WIDTH 15
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -50,7 +52,8 @@ typedef struct
     point pos;
     int lives;
     int experience;
-} hero_t ;
+    int keys;
+} hero_t;
 
 typedef struct
 {
@@ -60,7 +63,6 @@ typedef struct
     point starting_point;
     point ending_point;
     hero_t* hero;
-    point hero_pos;
     char next_map[BUFFERSIZE];
 } game_map_t;
 

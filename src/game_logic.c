@@ -13,8 +13,8 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
     dest.x = dest_x;
     dest.y = dest_y;
     point source;
-    source.x = game_map->hero_pos.x;
-    source.y = game_map->hero_pos.y;
+    source.x = game_map->hero->pos.x;
+    source.y = game_map->hero->pos.y;
     int movement_res = move_hero(game_map, &dest);
     if (movement_res == MOV_POSSIBLE)
     {
@@ -34,15 +34,29 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     if (p_conf_res == BUFFER_END)
     {
         WINDOW *map_win;
+        WINDOW *stat_win;
         game_map_t game_map;
-        if (load_game_map(map_win, &game_map, config.path_initial_map) == 1)
+        hero_t hero;
+        hero.experience = 0;
+        hero.keys = 3;
+        hero.lives = 9;
+        game_map.hero = &hero;
+        if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
         {
             map_win = newwin(game_map.e_height + 2,
                              game_map.e_width + 2,
-                             ((HEIGHT / 2) - (game_map.e_height / 2)),
-                             ((WIDTH / 2) - (game_map.e_width / 2)));
+                             ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                             ((WIDTH / 2) - (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+            stat_win = newwin(game_map.e_height + 2,
+                              STAT_WIN_WIDTH*2,
+                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                              ((WIDTH / 2) + (game_map.e_width / 2)) - STAT_WIN_WIDTH);
             refresh();
             render_map(map_win, &game_map);
+            wbkgd(stat_win, COLOR_PAIR(1));
+            box(stat_win, 0, 0);
+            wrefresh(stat_win);
+            // render_stat_map(stat_win, &game_map);
             char c;
             do
             {
@@ -63,25 +77,29 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 case 'w':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                    game_map.hero_pos.x, game_map.hero_pos.y - 1);
+                                                    game_map.hero->pos.x,
+                                                    game_map.hero->pos.y - 1);
                     break;
                 }
                 case 'd':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                    game_map.hero_pos.x + 1, game_map.hero_pos.y);
+                                                    game_map.hero->pos.x + 1,
+                                                    game_map.hero->pos.y);
                     break;
                 }
                 case 's':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                    game_map.hero_pos.x, game_map.hero_pos.y + 1);
+                                                    game_map.hero->pos.x,
+                                                    game_map.hero->pos.y + 1);
                     break;
                 }
                 case 'a':
                 {
                     movement_res = handle_movements(map_win, &game_map,
-                                                    game_map.hero_pos.x - 1, game_map.hero_pos.y);
+                                                    game_map.hero->pos.x - 1,
+                                                    game_map.hero->pos.y);
                     break;
                 }
                 default:
@@ -114,8 +132,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         char new_path_map[BUFFERSIZE];
                         strcpy(new_path_map, game_map.next_map);
                         delwin(map_win);
+                        delwin(stat_win);
                         deinit_gmt(&game_map);
-                        if (load_game_map(map_win, &game_map, new_path_map) != 1)
+                        if (load_game_map(map_win, &game_map, new_path_map, WIDTH, HEIGHT) != 1)
                         {
                             c = 'q';
                         }
@@ -123,12 +142,20 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         {
                             map_win = newwin(game_map.e_height + 2,
                                              game_map.e_width + 2,
-                                             ((HEIGHT / 2) - (game_map.e_height / 2)),
-                                             ((WIDTH / 2) - (game_map.e_width / 2)));
+                                             ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                                             ((WIDTH / 2) - (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+                            stat_win = newwin(game_map.e_height + 2,
+                                              STAT_WIN_WIDTH*2,
+                                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                                              ((WIDTH / 2) + (game_map.e_width / 2)) - STAT_WIN_WIDTH);
                             refresh();
                             box(map_win, 0, 0);
                             wrefresh(map_win);
                             render_map(map_win, &game_map);
+                            wbkgd(stat_win, COLOR_PAIR(1));
+                            box(stat_win, 0, 0);
+                            wrefresh(stat_win);
+                            // render_stat_map(stat_win, &game_map);
                         }
                     }
                     break;
