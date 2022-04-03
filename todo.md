@@ -1,4 +1,4 @@
-#### ideas to improve 
+### Ideas... 
 
 1. screen rendering with **colors**, animation and similar stuff
 2. add more objects to the scene, to get more interaction

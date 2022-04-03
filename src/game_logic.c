@@ -42,8 +42,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                              ((HEIGHT / 2) - (game_map.e_height / 2)),
                              ((WIDTH / 2) - (game_map.e_width / 2)));
             refresh();
-            box(map_win, 0, 0);
-            wrefresh(map_win);
             render_map(map_win, &game_map);
             char c;
             do
