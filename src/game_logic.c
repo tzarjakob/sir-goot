@@ -16,9 +16,9 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
     source.x = game_map->hero_pos.x;
     source.y = game_map->hero_pos.y;
     int movement_res = move_hero(game_map, &dest);
-    if (movement_res == 1)
+    if (movement_res == MOV_POSSIBLE)
     {
-        render_pixel(map_win, HERO_P, dest.x, dest.y);
+        render_pixel(map_win, HERO_ID_T, dest.x, dest.y);
         render_pixel(map_win, 0, source.x, source.y);
         wrefresh(map_win);
     }
@@ -49,7 +49,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 noecho();
                 point dest;
                 point start;
-                int movement_res = 0;
+                int movement_res = MOV_NOT_POSSIBLE;
                 c = getch();
                 switch (c)
                 {
@@ -90,7 +90,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // it would be significantly better if we could verify the current position of the hero
                 switch (movement_res)
                 {
-                case -1:
+                case MOV_DEAD:
                 {
                     c = 'q';
 
@@ -98,7 +98,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                     deinit_gmt(&game_map);
                     break;
                 }
-                case -2:
+                case MOV_WIN:
                 {
                     if (strcmp(game_map.next_map, "___") == 0)
                     {

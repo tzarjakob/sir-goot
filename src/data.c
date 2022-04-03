@@ -69,35 +69,53 @@ int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y)
     return retval;
 }
 
-// return 0 if not possible, return 1 if possible, return -2 if wins, return -1 if dead
+// 0 -> wall, 1->movement possible, -2 if wins, return -1 if dead
+
 int move_hero(game_map_t *game_map, point *dest)
 {
-    int retval = 0;
+    int retval = MOV_NOT_POSSIBLE;
     // out of bound
     if ((dest->x >= game_map->e_width) || (dest->x < 0) || (dest->y >= game_map->e_height) || (dest->y < 0))
     {
-        retval = 0;
+        retval = MOV_NOT_POSSIBLE;
     }
     else
     {
         unsigned char c = game_map->data[dest->y][dest->x];
-        if (c == TRAP_T)
+        switch (c)
         {
-            retval = -1;
-        } else if (c == ENDING_P) {
-            retval = -2;
+        case TRAP_T:
+        {
+            retval = MOV_DEAD;
+            break;
         }
-        else if (c != 0)
+        case ENDING_P:
         {
-            retval = 0;
+            retval = MOV_WIN;
+            break;
         }
-        else
+        case KEY_T:
         {
-            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;            
-            game_map->data[dest->y][dest->x] = HERO_P;
+            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;
+            game_map->data[dest->y][dest->x] = HERO_ID_T;
             game_map->hero_pos.x = dest->x;
             game_map->hero_pos.y = dest->y;
-            retval = 1;
+            retval = MOV_POSSIBLE;
+            // add key to hero
+            break;
+        }
+        case 0:
+        {
+            game_map->data[game_map->hero_pos.y][game_map->hero_pos.x] = 0;
+            game_map->data[dest->y][dest->x] = HERO_ID_T;
+            game_map->hero_pos.x = dest->x;
+            game_map->hero_pos.y = dest->y;
+            retval = MOV_POSSIBLE;
+            break;
+        }
+        default:
+            retval = MOV_NOT_POSSIBLE;
+            break;
         }
     }
 

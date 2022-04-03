@@ -10,7 +10,10 @@
 #define TRAP_T (unsigned char)3
 #define STARTING_P (unsigned char)4
 #define ENDING_P (unsigned char)5
-#define HERO_P (unsigned char)6
+#define HERO_ID_T (unsigned char)6
+#define DOORV_T (unsigned char)7
+#define DOORH_T (unsigned char)8
+#define KEY_T (unsigned char)9
 
 // return values of parsing functions
 #define BUFFER_END 1
@@ -19,6 +22,11 @@
 #define SEMANTICAL_ERROR 4
 
 #define NUMBER_NOT_FOUND -1
+
+#define MOV_POSSIBLE 0
+#define MOV_NOT_POSSIBLE 1
+#define MOV_DEAD 2
+#define MOV_WIN 3
 
 #define BUFFERSIZE 100
 
@@ -37,6 +45,13 @@ typedef struct
 
 } config_t;
 
+typedef struct 
+{
+    point pos;
+    int lives;
+    int experience;
+} hero_t ;
+
 typedef struct
 {
     unsigned char **data;
@@ -44,11 +59,10 @@ typedef struct
     int e_height;
     point starting_point;
     point ending_point;
-    char next_map[BUFFERSIZE];
+    hero_t* hero;
     point hero_pos;
+    char next_map[BUFFERSIZE];
 } game_map_t;
-
-// rows = height
 
 int init_gmt(game_map_t *map, int width, int height);
 int deinit_gmt(game_map_t *);

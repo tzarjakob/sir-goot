@@ -135,6 +135,7 @@ int parser_map(FILE *src, game_map_t *map)
             {
                 SIGNAL_ERROR = SYNTAX_ERROR;
             }
+            // SET MAP DIMENSION
             else if (strcmp(ob_name, "dimensions") == 0)
             {
                 int width = get_next_number(src);
@@ -153,6 +154,39 @@ int parser_map(FILE *src, game_map_t *map)
                 if (top_left_x != -1 && top_left_x != -1 && top_left_x != -1 && top_left_x != -1)
                 {
                     add_to_map_rect(map, WALL_T, top_left_x, top_left_y, bottom_right_x, bottom_right_y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "doorv") == 0) 
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, DOORV_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "doorh") == 0) 
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, DOORH_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "key") == 0) 
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, KEY_T, x, y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
@@ -178,7 +212,7 @@ int parser_map(FILE *src, game_map_t *map)
                     map->starting_point.y = y;
                     map->hero_pos.x = map->starting_point.x;
                     map->hero_pos.y = map->starting_point.y;
-                    add_to_map_point(map, HERO_P, x, y);
+                    add_to_map_point(map, HERO_ID_T, x, y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
@@ -288,7 +322,6 @@ int parser_config_file(FILE *src, config_t *config)
             }
             else if (strcmp(ob_name, "path") == 0)
             {
-                wlog("Config parsing", "PATH IDENTIFIED!!!");
                 char *path = get_next_word(src);
                 if (path == NULL)
                 {

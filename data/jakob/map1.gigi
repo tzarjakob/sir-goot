@@ -6,8 +6,14 @@ $ end_p 118 23
 $ wall 20 0 22 18
 
 (* Wall *)
-$ wall 0 7 10 8 
-$ wall 14 7 20 8
+$ wall 0 7 12 8 
+$ wall 13 7 20 8
+
+(* first door *)
+$ doorh 12 7
+
+(* first key *)
+$ key 8 4
 
 $ wall 0 12 17 13
 $ wall 20 18 50 20

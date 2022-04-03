@@ -37,7 +37,7 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         wattroff(win, COLOR_PAIR(2));
         break;
     }
-    case HERO_P:
+    case HERO_ID_T:
     {
         // wattron(win, A_BLINK);
         mvwprintw(win, height, width, "X");
@@ -47,6 +47,21 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     case ENDING_P:
     {
         mvwprintw(win, height, width, "!");
+        break;
+    }
+    case DOORH_T:
+    {
+        mvwprintw(win, height, width, "_");
+        break;
+    }
+    case DOORV_T:
+    {
+        mvwprintw(win, height, width, "|");
+        break;
+    }
+    case KEY_T:
+    {
+        mvwprintw(win, height, width, "?");
         break;
     }
     default:
