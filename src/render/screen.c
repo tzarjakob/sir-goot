@@ -65,6 +65,16 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         wattroff(win, A_BLINK);
         break;
     }
+    case ZOMBIE_T:
+    {
+        mvwprintw(win, height, width, "Z");
+        break;
+    }
+    case GHOST_T:
+    {
+        mvwprintw(win, height, width, "G");
+        break;
+    }
     default:
     {
         mvwprintw(win, height, width, " ");

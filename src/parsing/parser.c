@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #include "parser.h"
 #include "../data.h"
@@ -198,6 +199,36 @@ int parser_map(FILE *src, game_map_t *map)
                 if (x != -1 && y != -1)
                 {
                     add_to_map_point(map, TRAP_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "ghost") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    assert(map->n_ghosts < MAX_GHOSTS);
+                    add_to_map_point(map, GHOST_T, x, y);
+                    map->ghosts[map->n_ghosts].x = x;
+                    map->ghosts[map->n_ghosts].y = y;
+                    map->n_ghosts++;
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "zombie") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    assert(map->n_zombies < MAX_ZOMBIES);
+                    add_to_map_point(map, ZOMBIE_T, x, y);
+                    map->zombies[map->n_zombies].x = x;
+                    map->zombies[map->n_zombies].y = y;
+                    map->n_zombies++;
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;

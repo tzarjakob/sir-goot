@@ -11,6 +11,8 @@ $ wall 13 7 20 8
 
 (* first door *)
 $ doorh 12 7
+$ zombie 12 10
+$ ghost 12 11
 
 (* first key *)
 $ key 8 4

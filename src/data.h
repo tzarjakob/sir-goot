@@ -15,6 +15,8 @@
 #define DOORV_T (unsigned char)7
 #define DOORH_T (unsigned char)8
 #define KEY_T (unsigned char)9
+#define GHOST_T (unsigned char)10
+#define ZOMBIE_T (unsigned char)11
 
 #define INITIAL_KEYS 0
 #define INITIAL_MONEY 0
@@ -38,6 +40,12 @@
 
 #define STAT_WIN_WIDTH 30
 
+#define GHOST_DAMAGE 2
+#define ZOMBIE_DAMAGE 1
+
+#define MAX_ZOMBIES 50
+#define MAX_GHOSTS 50
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -53,13 +61,7 @@ typedef struct
 
 } config_t;
 
-typedef struct 
-{
-    point pos;
-    int damage;
-} zombie_t;
-
-typedef struct 
+typedef struct
 {
     point pos;
     int lives;
@@ -75,7 +77,11 @@ typedef struct
     int e_height;
     point starting_point;
     point ending_point;
-    hero_t* hero;
+    hero_t *hero;
+    point ghosts[MAX_GHOSTS];
+    int n_ghosts;
+    point zombies[MAX_ZOMBIES];
+    int n_zombies;
     char next_map[BUFFERSIZE];
 } game_map_t;
 
@@ -83,6 +89,6 @@ int init_gmt(game_map_t *map, int width, int height);
 int deinit_gmt(game_map_t *);
 int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, int brx, int bry);
 int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y);
-int move_hero(game_map_t *game_map, point* dest);
+int move_hero(game_map_t *game_map, point *dest);
 
 #endif
