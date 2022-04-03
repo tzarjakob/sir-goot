@@ -104,6 +104,21 @@ int move_hero(game_map_t *game_map, point *dest)
             (game_map->hero->keys)++;
             break;
         }
+        case DOORH_T:
+        {
+            if (game_map->hero->keys > 0)
+            {
+                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
+                game_map->data[dest->y][dest->x] = HERO_ID_T;
+                game_map->hero->pos.x = dest->x;
+                game_map->hero->pos.y = dest->y;
+                retval = MOV_POSSIBLE;
+                (game_map->hero->keys)--;
+            }
+            else
+                retval = MOV_NOT_POSSIBLE;
+            break;
+        }
         case 0:
         {
             game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;

@@ -32,9 +32,7 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     case TRAP_T:
     {
         wattrset(win, COLOR_PAIR(2));
-        wattron(win, A_BLINK);
         mvwprintw(win, height, width, "&");
-        wattroff(win, A_BLINK);
         wattroff(win, COLOR_PAIR(2));
         break;
     }
@@ -62,7 +60,9 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
     }
     case KEY_T:
     {
+        wattron(win, A_BLINK);
         mvwprintw(win, height, width, "?");
+        wattroff(win, A_BLINK);
         break;
     }
     default:

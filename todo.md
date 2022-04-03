@@ -7,6 +7,7 @@
 5. (eventually) add the option to choose which map to play
 6. handle error if not find log file
 7. set stricter constraints for map dimension 
+8. replace all the 0 with EMPTY_SPACE_T
 
 `add life system`: you have x lives, if you lose them you lose the game
 

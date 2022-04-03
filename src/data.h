@@ -5,6 +5,7 @@
 #define MAX_HEIGHT 50
 
 // data types in the map
+#define EMPTY_SPACE_T (unsigned char)0
 #define WALL_T (unsigned char)1
 #define BOUNCING_T (unsigned char)2
 #define TRAP_T (unsigned char)3
