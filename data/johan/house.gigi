@@ -1,0 +1,37 @@
+(* the house of the hero *)
+$ dimensions 25 8
+$ start_p 0 0
+$ end_p 10 4
+
+(* personal room walls *)
+$ wall 0 2 9 3
+$ wall 8 0 9 1
+
+(* Bed *)
+
+(* Chest with books and other stuff *)
+
+
+(* Magical room walls *)
+$ wall 13 0 14 1
+$ wall 13 2 14 4
+$ doorv 13 1
+$ wall 15 0 16 2
+$ wall 15 3 16 4
+$ doorv 15 2
+$ wall 17 1 18 4
+$ doorv 17 0
+$ wall 19 0 20 3
+$ doorv 19 3
+
+(* Magical chests at the extreme right of the map *)
+
+(* Food chest at the bottom left corner *)
+$ doorv 8 3
+
+(* wall in the low part of the map *)
+$ wall 0 4 10 5
+$ wall 11 4 25 5
+
+
+$ next_map data/johan/forest.gigi 

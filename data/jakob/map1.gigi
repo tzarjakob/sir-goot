@@ -1,9 +1,14 @@
 (* First map to load *)
 $ dimensions 120 25
-$ start_p 5 2
+$ start_p 2 1
 $ end_p 118 23
 
 $ wall 20 0 22 18
+
+(* Initial Room *)
+$ wall 0 2 19 3
+$ wall 15 0 16 1
+$ doorv 15 1
 
 (* Wall *)
 $ wall 0 7 12 8 

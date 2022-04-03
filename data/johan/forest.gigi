@@ -1,0 +1,6 @@
+(* the house of the hero *)
+$ dimensions 140 26 
+$ start_p 0 0
+$ end_p 139 25
+
+$ next_map ___ 

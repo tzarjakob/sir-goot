@@ -18,7 +18,7 @@
 #define GHOST_T (unsigned char)10
 #define ZOMBIE_T (unsigned char)11
 
-#define INITIAL_KEYS 0
+#define INITIAL_KEYS 1
 #define INITIAL_MONEY 0
 #define INITIAL_LIVES 3
 #define INITIAL_EXP 0
@@ -45,6 +45,8 @@
 
 #define MAX_ZOMBIES 50
 #define MAX_GHOSTS 50
+
+#define CONFIG_INITIAL_PATH "data/johan/config.gigi"
 
 #include <stdlib.h>
 #include <stdio.h>

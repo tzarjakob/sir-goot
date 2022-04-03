@@ -7,7 +7,7 @@
 #include "render/screen.h"
 #include "parsing/loading.h"
 
-int handle_movements(WINDOW *map_win, WINDOW* stat_win, game_map_t *game_map, int dest_x, int dest_y)
+int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, int dest_x, int dest_y)
 {
     point dest;
     dest.x = dest_x;
@@ -48,15 +48,16 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             map_win = newwin(game_map.e_height + 2,
                              game_map.e_width + 2,
                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
+                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2));
             stat_win = newwin(game_map.e_height + 2,
                               STAT_WIN_WIDTH,
                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
+                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
             refresh();
             render_map(map_win, &game_map);
             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
             char c;
+            // GAME LOOP
             do
             {
                 noecho();
@@ -142,11 +143,11 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                             map_win = newwin(game_map.e_height + 2,
                                              game_map.e_width + 2,
                                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
+                                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2));
                             stat_win = newwin(game_map.e_height + 2,
                                               STAT_WIN_WIDTH,
                                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
+                                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
                             refresh();
                             box(map_win, 0, 0);
                             wrefresh(map_win);
@@ -191,7 +192,7 @@ void main_screen(const int WIDTH, const int HEIGHT)
         case 'l':
         {
             // TODOO add the option to choose which map to play
-            char path[BUFFERSIZE] = "data/jakob/config.gigi";
+            char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
             int res = game_loop(path, WIDTH, HEIGHT);
             break;
         }

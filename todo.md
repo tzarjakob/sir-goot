@@ -8,6 +8,8 @@
 6. handle error if not find log file
 7. set stricter constraints for map dimension 
 8. replace all the 0 with EMPTY_SPACE_T
+9. end_p must have also as attribute the map to continue, in this way in one map it is possible to have more exit points
+10. implement going back to one point: restore the state left
 
 `add life system`: you have x lives, if you lose them you lose the game
 
