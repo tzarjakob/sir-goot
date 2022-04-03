@@ -16,6 +16,11 @@
 #define DOORH_T (unsigned char)8
 #define KEY_T (unsigned char)9
 
+#define INITIAL_KEYS 0
+#define INITIAL_MONEY 0
+#define INITIAL_LIVES 3
+#define INITIAL_EXP 0
+
 // return values of parsing functions
 #define BUFFER_END 1
 #define LEXICAL_ERROR 2
@@ -51,9 +56,16 @@ typedef struct
 typedef struct 
 {
     point pos;
+    int damage;
+} zombie_t;
+
+typedef struct 
+{
+    point pos;
     int lives;
     int experience;
     int keys;
+    int money;
 } hero_t;
 
 typedef struct

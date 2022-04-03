@@ -38,9 +38,10 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
         WINDOW *stat_win;
         game_map_t game_map;
         hero_t hero;
-        hero.experience = 0;
-        hero.keys = 3;
-        hero.lives = 9;
+        hero.experience = INITIAL_EXP;
+        hero.keys = INITIAL_KEYS;
+        hero.lives = INITIAL_LIVES;
+        hero.money = INITIAL_MONEY;
         game_map.hero = &hero;
         if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
         {

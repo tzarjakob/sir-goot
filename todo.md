@@ -11,7 +11,9 @@
 
 `add life system`: you have x lives, if you lose them you lose the game
 
-`add key sistem`: There are doors that you can open only with keys that you find around the map.
+`add monster system`: monsters are always RED
+1. zombies: if they see the hero they proceed towards him  
+2. ghosts: they can go even through the walls
 
 `add help sistem`: if you press h you can navigate around the screen with a cursor and get info about what you want
 
