@@ -7,7 +7,7 @@
 #include "render/screen.h"
 #include "parsing/loading.h"
 
-int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest_y)
+int handle_movements(WINDOW *map_win, WINDOW* stat_win, game_map_t *game_map, int dest_x, int dest_y)
 {
     point dest;
     dest.x = dest_x;
@@ -21,6 +21,7 @@ int handle_movements(WINDOW *map_win, game_map_t *game_map, int dest_x, int dest
         render_pixel(map_win, HERO_ID_T, dest.x, dest.y);
         render_pixel(map_win, 0, source.x, source.y);
         wrefresh(map_win);
+        render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
     return movement_res;
 }
@@ -46,17 +47,14 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             map_win = newwin(game_map.e_height + 2,
                              game_map.e_width + 2,
                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                             ((WIDTH / 2) - (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
             stat_win = newwin(game_map.e_height + 2,
-                              STAT_WIN_WIDTH*2,
+                              STAT_WIN_WIDTH,
                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                              ((WIDTH / 2) + (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
             refresh();
             render_map(map_win, &game_map);
-            wbkgd(stat_win, COLOR_PAIR(1));
-            box(stat_win, 0, 0);
-            wrefresh(stat_win);
-            // render_stat_map(stat_win, &game_map);
+            render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
             char c;
             do
             {
@@ -76,28 +74,28 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // Movements
                 case 'w':
                 {
-                    movement_res = handle_movements(map_win, &game_map,
+                    movement_res = handle_movements(map_win, stat_win, &game_map,
                                                     game_map.hero->pos.x,
                                                     game_map.hero->pos.y - 1);
                     break;
                 }
                 case 'd':
                 {
-                    movement_res = handle_movements(map_win, &game_map,
+                    movement_res = handle_movements(map_win, stat_win, &game_map,
                                                     game_map.hero->pos.x + 1,
                                                     game_map.hero->pos.y);
                     break;
                 }
                 case 's':
                 {
-                    movement_res = handle_movements(map_win, &game_map,
+                    movement_res = handle_movements(map_win, stat_win, &game_map,
                                                     game_map.hero->pos.x,
                                                     game_map.hero->pos.y + 1);
                     break;
                 }
                 case 'a':
                 {
-                    movement_res = handle_movements(map_win, &game_map,
+                    movement_res = handle_movements(map_win, stat_win, &game_map,
                                                     game_map.hero->pos.x - 1,
                                                     game_map.hero->pos.y);
                     break;
@@ -143,19 +141,16 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                             map_win = newwin(game_map.e_height + 2,
                                              game_map.e_width + 2,
                                              ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                                             ((WIDTH / 2) - (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+                                             ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
                             stat_win = newwin(game_map.e_height + 2,
-                                              STAT_WIN_WIDTH*2,
+                                              STAT_WIN_WIDTH,
                                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
-                                              ((WIDTH / 2) + (game_map.e_width / 2)) - STAT_WIN_WIDTH);
+                                              ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH/2));
                             refresh();
                             box(map_win, 0, 0);
                             wrefresh(map_win);
                             render_map(map_win, &game_map);
-                            wbkgd(stat_win, COLOR_PAIR(1));
-                            box(stat_win, 0, 0);
-                            wrefresh(stat_win);
-                            // render_stat_map(stat_win, &game_map);
+                            render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
                         }
                     }
                     break;

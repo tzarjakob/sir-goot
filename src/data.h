@@ -30,7 +30,7 @@
 
 #define BUFFERSIZE 100
 
-#define STAT_WIN_WIDTH 15
+#define STAT_WIN_WIDTH 30
 
 #include <stdlib.h>
 #include <stdio.h>

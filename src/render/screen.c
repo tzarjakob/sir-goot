@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <string.h>
 #include "screen.h"
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
@@ -70,6 +71,23 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         break;
     }
     }
+}
+
+void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width)
+{
+    wbkgd(stat_win, COLOR_PAIR(1));
+    box(stat_win, 0, 0);
+    wrefresh(stat_win);
+    int line = 1;
+    mvwprintw_center(stat_win, line++, width, "STATISTICS");
+    int lives = game_map->hero->lives;
+    int keys = game_map->hero->keys;
+    int exp = game_map->hero->experience;
+    line++;
+    mvwprintw(stat_win, line++, 3, "Lives: \t %d", lives);
+    mvwprintw(stat_win, line++, 3, "Keys: \t %d", keys);
+    mvwprintw(stat_win, line++, 3, "Experience: \t %d", exp);
+    wrefresh(stat_win);
 }
 
 void render_map(WINDOW *win, game_map_t *map)
