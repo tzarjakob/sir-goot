@@ -203,6 +203,39 @@ int parser_map(FILE *src, game_map_t *map)
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
             }
+            else if (strcmp(ob_name, "bed") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, BED_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "mag_chest") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, MAGICAL_CHEST_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
+            else if (strcmp(ob_name, "gen_chest") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                if (x != -1 && y != -1)
+                {
+                    add_to_map_point(map, GENERAL_CHEST_T, x, y);
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
             else if (strcmp(ob_name, "ghost") == 0)
             {
                 int x = get_next_number(src);

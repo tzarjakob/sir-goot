@@ -9,17 +9,17 @@
 
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, int dest_x, int dest_y)
 {
-    point dest;
+    point_t dest;
     dest.x = dest_x;
     dest.y = dest_y;
-    point source;
+    point_t source;
     source.x = game_map->hero->pos.x;
     source.y = game_map->hero->pos.y;
     int movement_res = move_hero(game_map, &dest);
     if (movement_res == MOV_POSSIBLE)
     {
         render_pixel(map_win, HERO_ID_T, dest.x, dest.y);
-        render_pixel(map_win, 0, source.x, source.y);
+        render_pixel(map_win, EMPTY_SPACE_T, source.x, source.y);
         wrefresh(map_win);
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
@@ -61,12 +61,28 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             do
             {
                 noecho();
-                point dest;
-                point start;
+                point_t dest;
+                point_t start;
                 int movement_res = MOV_NOT_POSSIBLE;
                 c = getch();
                 switch (c)
                 {
+                case 'e':
+                {
+                    // show inventary window -> fixed dimension
+                    WINDOW *inv_win = newwin(INV_WIN_HEIGHT,
+                                             INV_WIN_WIDTH,
+                                             (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
+                                             (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                    show_inventory(inv_win, &game_map);
+                    getch();
+                    delwin(inv_win);
+                    wclear(stdscr);
+                    refresh();
+                    render_map(map_win, &game_map);
+                    render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                    break;
+                }
                 case 'q':
                 {
                     delwin(map_win);

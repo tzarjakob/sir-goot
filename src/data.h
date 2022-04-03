@@ -17,8 +17,11 @@
 #define KEY_T (unsigned char)9
 #define GHOST_T (unsigned char)10
 #define ZOMBIE_T (unsigned char)11
+#define GENERAL_CHEST_T (unsigned char)12
+#define MAGICAL_CHEST_T (unsigned char)13
+#define BED_T (unsigned char)14
 
-#define INITIAL_KEYS 1
+#define INITIAL_KEYS 10
 #define INITIAL_MONEY 0
 #define INITIAL_LIVES 3
 #define INITIAL_EXP 0
@@ -39,6 +42,8 @@
 #define BUFFERSIZE 100
 
 #define STAT_WIN_WIDTH 30
+#define INV_WIN_WIDTH 30
+#define INV_WIN_HEIGHT 20
 
 #define GHOST_DAMAGE 2
 #define ZOMBIE_DAMAGE 1
@@ -46,7 +51,7 @@
 #define MAX_ZOMBIES 50
 #define MAX_GHOSTS 50
 
-#define CONFIG_INITIAL_PATH "data/jakob/config.gigi"
+#define CONFIG_INITIAL_PATH "data/johan/config.gigi"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -55,21 +60,27 @@ typedef struct
 {
     int x;
     int y;
-} point;
+} point_t;
+
+typedef struct 
+{
+    // weapons
+    // 
+} inventory_t;
 
 typedef struct
 {
     char path_initial_map[BUFFERSIZE];
-
 } config_t;
 
 typedef struct
 {
-    point pos;
+    point_t pos;
     int lives;
     int experience;
     int keys;
     int money;
+    inventory_t inventory;
 } hero_t;
 
 typedef struct
@@ -77,12 +88,12 @@ typedef struct
     unsigned char **data;
     int e_width;
     int e_height;
-    point starting_point;
-    point ending_point;
+    point_t starting_point;
+    point_t ending_point;
     hero_t *hero;
-    point ghosts[MAX_GHOSTS];
+    point_t ghosts[MAX_GHOSTS];
     int n_ghosts;
-    point zombies[MAX_ZOMBIES];
+    point_t zombies[MAX_ZOMBIES];
     int n_zombies;
     char next_map[BUFFERSIZE];
 } game_map_t;
@@ -91,6 +102,6 @@ int init_gmt(game_map_t *map, int width, int height);
 int deinit_gmt(game_map_t *);
 int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, int brx, int bry);
 int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y);
-int move_hero(game_map_t *game_map, point *dest);
+int move_hero(game_map_t *game_map, point_t *dest);
 
 #endif

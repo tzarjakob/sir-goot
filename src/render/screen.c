@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include "screen.h"
+#include "../log.h"
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
 {
@@ -75,16 +76,47 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         mvwprintw(win, height, width, "G");
         break;
     }
-    default:
+    case GENERAL_CHEST_T:
+    {
+        mvwprintw(win, height, width, "C");
+        break;
+    }
+    case MAGICAL_CHEST_T:
+    {
+        mvwprintw(win, height, width, "M");
+        break;
+    }
+    case BED_T:
+    {
+        mvwprintw(win, height, width, "=");
+        break;
+    }
+    case EMPTY_SPACE_T:
     {
         mvwprintw(win, height, width, " ");
+        break;
+    }
+    default:
+    {
+        wlog("Rendering pixel", "Unknown value...");
         break;
     }
     }
 }
 
+void show_inventory(WINDOW *inv_win, game_map_t *game_map)
+{
+    refresh();
+    wbkgd(inv_win, COLOR_PAIR(1));
+    box(inv_win, 0, 0);
+    int line = 1;
+    mvwprintw_center(inv_win, line++, INV_WIN_WIDTH, "INVENTORY");
+    wrefresh(inv_win);
+}
+
 void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width)
 {
+    wclear(stat_win);
     wbkgd(stat_win, COLOR_PAIR(1));
     box(stat_win, 0, 0);
     wrefresh(stat_win);

@@ -18,7 +18,7 @@ int init_gmt(game_map_t *map, int width, int height)
         (map->data)[i] = (unsigned char *)malloc(width * sizeof(unsigned char));
         for (int j = 0; j < width; j++)
         {
-            map->data[i][j] = 0;
+            map->data[i][j] = EMPTY_SPACE_T;
         }
     }
     return 0;
@@ -70,8 +70,7 @@ int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y)
 }
 
 // 0 -> wall, 1->movement possible, -2 if wins, return -1 if dead
-
-int move_hero(game_map_t *game_map, point *dest)
+int move_hero(game_map_t *game_map, point_t *dest)
 {
     int retval = MOV_NOT_POSSIBLE;
     // out of bound
@@ -96,7 +95,7 @@ int move_hero(game_map_t *game_map, point *dest)
         }
         case KEY_T:
         {
-            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
+            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
             game_map->data[dest->y][dest->x] = HERO_ID_T;
             game_map->hero->pos.x = dest->x;
             game_map->hero->pos.y = dest->y;
@@ -108,7 +107,7 @@ int move_hero(game_map_t *game_map, point *dest)
         {
             if (game_map->hero->keys > 0)
             {
-                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
+                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
                 game_map->data[dest->y][dest->x] = HERO_ID_T;
                 game_map->hero->pos.x = dest->x;
                 game_map->hero->pos.y = dest->y;
@@ -123,7 +122,7 @@ int move_hero(game_map_t *game_map, point *dest)
         {
             if (game_map->hero->keys > 0)
             {
-                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
+                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
                 game_map->data[dest->y][dest->x] = HERO_ID_T;
                 game_map->hero->pos.x = dest->x;
                 game_map->hero->pos.y = dest->y;
@@ -134,9 +133,9 @@ int move_hero(game_map_t *game_map, point *dest)
                 retval = MOV_NOT_POSSIBLE;
             break;
         }
-        case 0:
+        case EMPTY_SPACE_T:
         {
-            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = 0;
+            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
             game_map->data[dest->y][dest->x] = HERO_ID_T;
             game_map->hero->pos.x = dest->x;
             game_map->hero->pos.y = dest->y;
