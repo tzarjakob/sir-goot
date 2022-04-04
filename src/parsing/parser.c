@@ -266,6 +266,28 @@ int parser_map(FILE *src, game_map_t *map)
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;
             }
+            else if (strcmp(ob_name, "portal") == 0)
+            {
+                int x = get_next_number(src);
+                int y = get_next_number(src);
+                char *path = get_next_word(src);
+                if (path == NULL)
+                {
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+                }
+                else if (x != -1 && y != -1)
+                {
+                    assert(map->n_portals < MAX_PORTALS);
+                    add_to_map_point(map, PORTAL_T, x, y);
+                    map->portals[map->n_portals].pos.x = x;
+                    map->portals[map->n_portals].pos.y = y;
+                    strcpy(map->portals[map->n_portals].path, path);
+                    free(path);
+                    map->n_portals++;
+                }
+                else
+                    SIGNAL_ERROR = SYNTAX_ERROR;
+            }
             else if (strcmp(ob_name, "start_p") == 0)
             {
                 int x = get_next_number(src);

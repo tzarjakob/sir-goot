@@ -20,8 +20,9 @@
 #define GENERAL_CHEST_T (unsigned char)12
 #define MAGICAL_CHEST_T (unsigned char)13
 #define BED_T (unsigned char)14
+#define PORTAL_T (unsigned char)15
 
-#define INITIAL_KEYS 10
+#define INITIAL_KEYS 1
 #define INITIAL_MONEY 0
 #define INITIAL_LIVES 3
 #define INITIAL_EXP 0
@@ -48,10 +49,11 @@
 #define GHOST_DAMAGE 2
 #define ZOMBIE_DAMAGE 1
 
+#define MAX_PORTALS 10
 #define MAX_ZOMBIES 50
 #define MAX_GHOSTS 50
 
-#define CONFIG_INITIAL_PATH "data/johan/config.gigi"
+#define CONFIG_INITIAL_PATH "data/jakob/config.gigi"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -61,6 +63,12 @@ typedef struct
     int x;
     int y;
 } point_t;
+
+typedef struct 
+{
+    point_t pos;
+    char path[BUFFERSIZE];
+} portal_t;
 
 typedef struct 
 {
@@ -90,6 +98,8 @@ typedef struct
     int e_height;
     point_t starting_point;
     point_t ending_point;
+    portal_t portals[MAX_PORTALS];
+    int n_portals;
     hero_t *hero;
     point_t ghosts[MAX_GHOSTS];
     int n_ghosts;

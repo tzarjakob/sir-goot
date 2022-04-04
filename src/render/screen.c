@@ -91,6 +91,9 @@ void render_pixel(WINDOW *win, unsigned char c, int width, int height)
         mvwprintw(win, height, width, "=");
         break;
     }
+    case PORTAL_T:
+        mvwprintw(win, height, width, "H");
+        break;
     case EMPTY_SPACE_T:
     {
         mvwprintw(win, height, width, " ");
