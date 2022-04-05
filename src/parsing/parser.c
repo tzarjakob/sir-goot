@@ -298,7 +298,7 @@ int parser_map(FILE *src, game_map_t *map)
                     map->starting_point.y = y;
                     map->hero->pos.x = map->starting_point.x; 
                     map->hero->pos.y = map->starting_point.y;
-                    add_to_map_point(map, HERO_ID_T, x, y);
+                    // add_to_map_point(map, HERO_ID_T, x, y);
                 }
                 else
                     SIGNAL_ERROR = SYNTAX_ERROR;

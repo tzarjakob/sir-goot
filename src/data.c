@@ -95,8 +95,8 @@ int move_hero(game_map_t *game_map, point_t *dest)
         }
         case KEY_T:
         {
-            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
-            game_map->data[dest->y][dest->x] = HERO_ID_T;
+            // game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
+            // game_map->data[dest->y][dest->x] = HERO_ID_T;
             game_map->hero->pos.x = dest->x;
             game_map->hero->pos.y = dest->y;
             retval = MOV_POSSIBLE;
@@ -107,8 +107,8 @@ int move_hero(game_map_t *game_map, point_t *dest)
         {
             if (game_map->hero->keys > 0)
             {
-                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
-                game_map->data[dest->y][dest->x] = HERO_ID_T;
+                // game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
+                // game_map->data[dest->y][dest->x] = HERO_ID_T;
                 game_map->hero->pos.x = dest->x;
                 game_map->hero->pos.y = dest->y;
                 retval = MOV_POSSIBLE;
@@ -122,8 +122,8 @@ int move_hero(game_map_t *game_map, point_t *dest)
         {
             if (game_map->hero->keys > 0)
             {
-                game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
-                game_map->data[dest->y][dest->x] = HERO_ID_T;
+                // game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
+                // game_map->data[dest->y][dest->x] = HERO_ID_T;
                 game_map->hero->pos.x = dest->x;
                 game_map->hero->pos.y = dest->y;
                 retval = MOV_POSSIBLE;
@@ -133,10 +133,15 @@ int move_hero(game_map_t *game_map, point_t *dest)
                 retval = MOV_NOT_POSSIBLE;
             break;
         }
+        case PORTAL_T:
+        {
+            retval = MOV_PORTAL;
+            break;
+        }
         case EMPTY_SPACE_T:
         {
-            game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
-            game_map->data[dest->y][dest->x] = HERO_ID_T;
+            // game_map->data[game_map->hero->pos.y][game_map->hero->pos.x] = EMPTY_SPACE_T;
+            // game_map->data[dest->y][dest->x] = HERO_ID_T;
             game_map->hero->pos.x = dest->x;
             game_map->hero->pos.y = dest->y;
             retval = MOV_POSSIBLE;

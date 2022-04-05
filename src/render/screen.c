@@ -117,6 +117,22 @@ void show_inventory(WINDOW *inv_win, game_map_t *game_map)
     wrefresh(inv_win);
 }
 
+void show_chest(WINDOW* chest_win, game_map_t* game_map)
+{
+    refresh();
+    wbkgd(chest_win, COLOR_PAIR(1));
+    box(chest_win, 0, 0);
+    int line = 1;
+    mvwprintw_center(chest_win, line++, INV_WIN_WIDTH, "CHEST VIEW");
+    wrefresh(chest_win);
+}
+
+void render_hero(WINDOW* map_win, hero_t* hero)
+{
+    render_pixel(map_win, HERO_ID_T, hero->pos.x, hero->pos.y);
+    wrefresh(map_win);
+}
+
 void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width)
 {
     wclear(stat_win);

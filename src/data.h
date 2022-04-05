@@ -3,6 +3,8 @@
 
 #define MAX_WIDTH 200
 #define MAX_HEIGHT 50
+// timeout of each frame
+#define GAME_SPEED 1000
 
 // data types in the map
 #define EMPTY_SPACE_T (unsigned char)0
@@ -39,6 +41,8 @@
 #define MOV_NOT_POSSIBLE 1
 #define MOV_DEAD 2
 #define MOV_WIN 3
+#define MOV_PORTAL 4
+#define MOV_CHEST 5
 
 #define BUFFERSIZE 100
 

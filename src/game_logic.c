@@ -12,15 +12,9 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, in
     point_t dest;
     dest.x = dest_x;
     dest.y = dest_y;
-    point_t source;
-    source.x = game_map->hero->pos.x;
-    source.y = game_map->hero->pos.y;
     int movement_res = move_hero(game_map, &dest);
     if (movement_res == MOV_POSSIBLE)
     {
-        render_pixel(map_win, HERO_ID_T, dest.x, dest.y);
-        render_pixel(map_win, EMPTY_SPACE_T, source.x, source.y);
-        wrefresh(map_win);
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
     return movement_res;
@@ -56,11 +50,18 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             refresh();
             render_map(map_win, &game_map);
             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
-            char c;
+            char c; int tmp = 1;
             // GAME LOOP
             do
             {
                 noecho();
+                // add no delay
+                nodelay(map_win, true);
+                timeout(GAME_SPEED);
+                // render hero on the screen
+                render_hero(map_win, &hero);
+                // render_movement
+                
                 point_t dest;
                 point_t start;
                 int movement_res = MOV_NOT_POSSIBLE;
@@ -124,6 +125,27 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // it would be significantly better if we could verify the current position of the hero
                 switch (movement_res)
                 {
+                case MOV_CHEST:
+                {
+                    // show inventary window -> fixed dimension
+                    WINDOW *chest_win = newwin(INV_WIN_HEIGHT,
+                                             INV_WIN_WIDTH,
+                                             (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
+                                             (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                    show_chest(chest_win, &game_map);
+                    getch();
+                    delwin(chest_win);
+                    wclear(stdscr);
+                    refresh();
+                    render_map(map_win, &game_map);
+                    render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                    break;
+                }
+                case MOV_PORTAL:
+                {
+                    // retrieve path
+                    break;
+                }
                 case MOV_DEAD:
                 {
                     c = 'q';
