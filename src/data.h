@@ -57,7 +57,7 @@
 #define MAX_ZOMBIES 50
 #define MAX_GHOSTS 50
 
-#define CONFIG_INITIAL_PATH "data/jakob/config.gigi"
+#define CONFIG_INITIAL_PATH "data/johan/config.gigi"
 
 #include <stdlib.h>
 #include <stdio.h>
