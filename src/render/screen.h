@@ -13,5 +13,6 @@ void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width);
 void show_inventory(WINDOW* inv_win, game_map_t* game_map);
 void show_chest(WINDOW* chest_win, game_map_t* game_map);
 void render_hero(WINDOW* map_win, hero_t* hero);
+void clear_hero_render(WINDOW* map_win, hero_t* hero);
 
 #endif 

@@ -132,13 +132,18 @@ void render_hero(WINDOW* map_win, hero_t* hero)
     render_pixel(map_win, HERO_ID_T, hero->pos.x, hero->pos.y);
     wrefresh(map_win);
 }
+void clear_hero_render(WINDOW* map_win, hero_t* hero)
+{
+    render_pixel(map_win, EMPTY_SPACE_T, hero->pos.x, hero->pos.y);
+    // wrefresh(map_win);
+}
 
 void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width)
 {
     wclear(stat_win);
     wbkgd(stat_win, COLOR_PAIR(1));
     box(stat_win, 0, 0);
-    wrefresh(stat_win);
+    // wrefresh(stat_win);
     int line = 1;
     mvwprintw_center(stat_win, line++, width, "STATISTICS");
     int lives = game_map->hero->lives;

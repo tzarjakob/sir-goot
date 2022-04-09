@@ -12,9 +12,14 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, in
     point_t dest;
     dest.x = dest_x;
     dest.y = dest_y;
+    // point_t sor;
+    // sor.x = game_map->hero->pos.x;
+    // sor.y = game_map->hero->pos.y;
     int movement_res = move_hero(game_map, &dest);
     if (movement_res == MOV_POSSIBLE)
     {
+        // render_pixel(map_win, game_map->data[sor.y][sor.x], sor.x, sor.y);
+        // TODO stat map should be rendered only if some statistic change
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
     return movement_res;
@@ -56,8 +61,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             {
                 noecho();
                 // add no delay
-                nodelay(map_win, true);
-                timeout(GAME_SPEED);
+                // TODO adding the nodelay and the timeout options causes the inv_win to disappear in GAME_SPEED time
+                // nodelay(map_win, true);
+                // timeout(GAME_SPEED);
                 // render hero on the screen
                 render_hero(map_win, &hero);
                 // render_movement
@@ -66,6 +72,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 point_t start;
                 int movement_res = MOV_NOT_POSSIBLE;
                 c = getch();
+
+                // it clear the rendering of the hero
+                clear_hero_render(map_win, &hero);
                 switch (c)
                 {
                 case 'e':
@@ -75,6 +84,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                                              INV_WIN_WIDTH,
                                              (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
                                              (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                    // nodelay(map_win, false);
                     show_inventory(inv_win, &game_map);
                     getch();
                     delwin(inv_win);
