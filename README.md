@@ -26,7 +26,7 @@ The supported elements in the map are:
 4. **gen_chest**: a chest in which you can find something useful. **It is not yet supported as game logic**
 5. **portal**: an alternative point to go in another map
 
-Technically the parser supports other type which can be loaded into the map, but there is yet no game logic behind them.
+Technically the parser supports other types which can be loaded into the map, but there is yet no game logic behind them.
 
 ### Controls
 The character moves with the **wasd** keys, with **e** the inventory is opened, with **q** the exit screen opens.
