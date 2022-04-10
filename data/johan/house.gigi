@@ -8,6 +8,9 @@ $ wall 0 2 9 3
 $ wall 8 0 9 1
 
 (* Bed *)
+$ bed 0 1
+$ gen_chest 7 0
+$ key 6 0
 
 (* Chest with books and other stuff *)
 

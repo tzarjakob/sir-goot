@@ -57,7 +57,6 @@ int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, 
 
 void move_possible()
 {
-
 }
 
 int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y)
@@ -100,6 +99,7 @@ int move_hero(game_map_t *game_map, point_t *dest)
         }
         case KEY_T:
         {
+            game_map->data[dest->y][dest->x] = EMPTY_SPACE_T;
             game_map->hero->pos.x = dest->x;
             game_map->hero->pos.y = dest->y;
             retval = MOV_POSSIBLE;
@@ -133,6 +133,30 @@ int move_hero(game_map_t *game_map, point_t *dest)
             }
             else
                 retval = MOV_NOT_POSSIBLE;
+            break;
+        }
+        case GENERAL_CHEST_T:
+        {
+            // game_map->hero->pos.x = dest->x;
+            // game_map->hero->pos.y = dest->y;
+            retval = MOV_CHEST;
+            break;
+        }
+        case MAGICAL_CHEST_T:
+        {
+            // open it only if you are a wizard, else display a warning
+            if (game_map->hero->wizard)
+            {
+                // you can open the chest
+                // game_map->hero->pos.x = dest->x;
+                // game_map->hero->pos.y = dest->y;
+                retval = MOV_CHEST;
+            }
+            else
+            {
+                // display an error message!
+                retval = MOV_NOT_POSSIBLE;
+            }
             break;
         }
         case PORTAL_T:

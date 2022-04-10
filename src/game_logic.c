@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <string.h>
+#include <stdbool.h>
 #include "log.h"
 #include "data.h"
 #include "parsing/parser.h"
@@ -7,21 +8,11 @@
 #include "render/screen.h"
 #include "parsing/loading.h"
 
-int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, int dest_x, int dest_y)
+int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t* dest)
 {
-    point_t dest;
-    dest.x = dest_x;
-    dest.y = dest_y;
-    // point_t sor;
-    // sor.x = game_map->hero->pos.x;
-    // sor.y = game_map->hero->pos.y;
-    int movement_res = move_hero(game_map, &dest);
+    int movement_res = move_hero(game_map, dest);
     if (movement_res == MOV_POSSIBLE)
-    {
-        // render_pixel(map_win, game_map->data[sor.y][sor.x], sor.x, sor.y);
-        // TODO stat map should be rendered only if some statistic change
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
-    }
     return movement_res;
 }
 
@@ -41,6 +32,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
         hero.keys = INITIAL_KEYS;
         hero.lives = INITIAL_LIVES;
         hero.money = INITIAL_MONEY;
+        hero.wizard = false;
         game_map.hero = &hero;
         if (load_game_map(map_win, &game_map, config.path_initial_map, WIDTH, HEIGHT) == 1)
         {
@@ -84,7 +76,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                                              INV_WIN_WIDTH,
                                              (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
                                              (WIDTH / 2) - (INV_WIN_WIDTH / 2));
-                    // nodelay(map_win, false);
                     show_inventory(inv_win, &game_map);
                     getch();
                     delwin(inv_win);
@@ -103,30 +94,30 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // Movements
                 case 'w':
                 {
-                    movement_res = handle_movements(map_win, stat_win, &game_map,
-                                                    game_map.hero->pos.x,
-                                                    game_map.hero->pos.y - 1);
+                    dest.x = game_map.hero->pos.x;
+                    dest.y = game_map.hero->pos.y - 1;
+                    movement_res = handle_movements(map_win, stat_win, &game_map, &dest);
                     break;
                 }
                 case 'd':
                 {
-                    movement_res = handle_movements(map_win, stat_win, &game_map,
-                                                    game_map.hero->pos.x + 1,
-                                                    game_map.hero->pos.y);
+                    dest.x = game_map.hero->pos.x + 1;
+                    dest.y = game_map.hero->pos.y;
+                    movement_res = handle_movements(map_win, stat_win, &game_map, &dest);
                     break;
                 }
                 case 's':
                 {
-                    movement_res = handle_movements(map_win, stat_win, &game_map,
-                                                    game_map.hero->pos.x,
-                                                    game_map.hero->pos.y + 1);
+                    dest.x = game_map.hero->pos.x;
+                    dest.y = game_map.hero->pos.y + 1;
+                    movement_res = handle_movements(map_win, stat_win, &game_map, &dest);
                     break;
                 }
                 case 'a':
                 {
-                    movement_res = handle_movements(map_win, stat_win, &game_map,
-                                                    game_map.hero->pos.x - 1,
-                                                    game_map.hero->pos.y);
+                    dest.x = game_map.hero->pos.x - 1;
+                    dest.y = game_map.hero->pos.y;
+                    movement_res = handle_movements(map_win, stat_win, &game_map, &dest);
                     break;
                 }
                 default:
@@ -172,7 +163,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         delwin(map_win);
                         deinit_gmt(&game_map);
                         clear();
-                        mvwprintw_center(stdscr, 6, WIDTH, "HAI VINTO");
+                        // winning_screen(WIDTH, HEIGHT);
                     }
                     else
                     {

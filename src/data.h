@@ -61,6 +61,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct
 {
@@ -92,6 +93,7 @@ typedef struct
     int experience;
     int keys;
     int money;
+    bool wizard;
     inventory_t inventory;
 } hero_t;
 

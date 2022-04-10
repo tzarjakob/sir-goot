@@ -1,15 +1,11 @@
 #include <ncurses.h>
-#include "log.h"
-#include "data.h"
-#include "game_logic.h"
 #include <string.h>
-
+#include "game_logic.h"
 
 int main()
 {
     initscr();
     curs_set(0);
-    game_map_t map_game;
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
     main_screen(WIDTH, HEIGHT);
