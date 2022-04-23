@@ -5,6 +5,7 @@
 #define MAX_HEIGHT 50
 // timeout of each frame
 #define GAME_SPEED 1000
+#define MAXIMUM_GAMES 10
 
 // data types in the map
 #define EMPTY_SPACE_T (unsigned char)0
@@ -44,7 +45,7 @@
 #define MOV_PORTAL 4
 #define MOV_CHEST 5
 
-#define BUFFERSIZE 100
+#define BUFFERSIZE 256
 
 #define STAT_WIN_WIDTH 30
 #define INV_WIN_WIDTH 30
@@ -57,7 +58,7 @@
 #define MAX_ZOMBIES 50
 #define MAX_GHOSTS 50
 
-#define CONFIG_INITIAL_PATH "data/johan/config.gigi"
+// #define CONFIG_INITIAL_PATH "data/johan/config.gigi"
 
 #include <stdlib.h>
 #include <stdio.h>

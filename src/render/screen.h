@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include "../data.h"
+#include <dirent.h>
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text);
 void render_pixel(WINDOW *win, unsigned char c, int width, int height);
@@ -14,5 +15,6 @@ void show_inventory(WINDOW* inv_win, game_map_t* game_map);
 void show_chest(WINDOW* chest_win, game_map_t* game_map);
 void render_hero(WINDOW* map_win, hero_t* hero);
 void clear_hero_render(WINDOW* map_win, hero_t* hero);
+int choose_index(struct dirent** dirs, int n);
 
 #endif 

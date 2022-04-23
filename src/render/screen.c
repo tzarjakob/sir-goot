@@ -2,6 +2,7 @@
 #include <string.h>
 #include "screen.h"
 #include "../log.h"
+#include <dirent.h>
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
 {
@@ -168,6 +169,22 @@ void render_map(WINDOW *win, game_map_t *map)
         }
     }
     wrefresh(win);
+}
+
+
+int choose_index(struct dirent** dirs, int n)
+{
+    WINDOW* choose_game_win = newwin(5, 5, 30, 30);
+    int res_index = 0;
+    while (res_index < n)
+    {
+        mvwprintw_center(choose_game_win, res_index, 25, dirs[res_index]->d_name);
+        res_index++;
+        getch();
+    }
+    delwin(choose_game_win);
+
+    return 0;
 }
 
 void render_main_screen(const int WIDTH, const int HEIGHT)
