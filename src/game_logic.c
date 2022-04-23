@@ -264,10 +264,17 @@ char *choose_game()
     closedir(dr);
     chdir("..");
     int chosen_index = choose_index(directories, dim_dir);
-
-    strcat(retval, directories[chosen_index]);
-    strcat(retval, "/config.gigi");
-    return retval;
+    if (chosen_index == -1)
+    {
+        free(retval);
+        return NULL;
+    }
+    else
+    {
+        strcat(retval, directories[chosen_index]);
+        strcat(retval, "/config.gigi");
+        return retval;
+    }
 }
 
 void main_screen(const int WIDTH, const int HEIGHT)
@@ -286,15 +293,10 @@ void main_screen(const int WIDTH, const int HEIGHT)
             // TODOO add the option to choose which map to play
             // char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
             char *path = choose_game();
-            if (path == NULL)
-            {
-                // display error
-                printw("ERROR");
-                getch();
-                exit(11);
+            if (path != NULL) {
+                int res = game_loop(path, WIDTH, HEIGHT);
+                free(path);
             }
-            int res = game_loop(path, WIDTH, HEIGHT);
-            free(path);
             break;
         }
         case 'q':

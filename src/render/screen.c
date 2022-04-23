@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <string.h>
+#include <stdbool.h>
 #include "screen.h"
 #include "../log.h"
 #include <dirent.h>
@@ -180,13 +181,12 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
     WINDOW *choose_game_win = newwin(win_height, win_width,
                                      HEIGHT / 5, WIDTH / 5);
     wbkgd(choose_game_win, COLOR_PAIR(1));
-    // box(choose_game_win, 0, 0);
-    // int line = 1;
-    // mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
-    // line++;
 
-    char c;
+    int c;
     int current_choice = 0;
+    keypad(stdscr, true);
+    // keypad(choose_game_win, true);
+    bool end = false;
     do
     {
         box(choose_game_win, 0, 0);
@@ -212,20 +212,25 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
         c = getch();
         switch (c)
         {
-        case 's':
+        case KEY_DOWN:
         {
             current_choice = (current_choice + 1) % n_choices;
             break;
         }
-        case 'w':
+        case KEY_UP:
         {
             current_choice = (current_choice + n_choices - 1) % n_choices;
             break;
         }
-        case 'q':
+        case (int)'\n':
+        {
+            end = true;
+            break;
+        }
+        case (int)'q':
         {
             current_choice = -1;
-            // FINISH the LOOP
+            end = true;
             break;
         }
         default:
@@ -234,7 +239,7 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
         }
         }
 
-    } while (c != 'k');
+    } while (!end);
 
     delwin(choose_game_win);
 
