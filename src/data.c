@@ -124,7 +124,7 @@ int move_hero(game_map_t *game_map, point_t *dest)
             }
             else
             {
-                // dialog
+                message_dialog("Error", "You have no keys to open the door :(");
                 retval = MOV_NOT_POSSIBLE;
             }
             break;
@@ -146,7 +146,7 @@ int move_hero(game_map_t *game_map, point_t *dest)
             else
             {
                 // dialog
-                // message_dialog("Error", "You have no keys to open the door :(");
+                message_dialog("Error", "You have no keys to open the door :(");
                 retval = MOV_NOT_POSSIBLE;
             }
             break;

@@ -13,16 +13,19 @@
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
 {
     int movement_res = move_hero(game_map, dest);
-    if (movement_res == MOV_POSSIBLE)
-    {
-        render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
-    }
+    // if (movement_res == MOV_POSSIBLE)
+    // {
+    //     render_map(map_win, game_map);
+    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    // }
+    render_map(map_win, game_map);
+    render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     // if (movement_res == MOV_POSSIBLE_REFRESH)
     // {
     //     render_map(map_win, game_map);
     //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     // }
-    // else if (movement_res == MOV_POSSIBLE) 
+    // else if (movement_res == MOV_POSSIBLE)
     // {
     //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     // }
@@ -304,7 +307,8 @@ void main_screen(const int WIDTH, const int HEIGHT)
             // TODOO add the option to choose which map to play
             // char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
             char *path = choose_game();
-            if (path != NULL) {
+            if (path != NULL)
+            {
                 int res = game_loop(path, WIDTH, HEIGHT);
                 free(path);
             }

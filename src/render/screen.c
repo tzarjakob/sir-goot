@@ -228,8 +228,32 @@ bool confirmation_dialog(const char *title, const char *question)
     wrefresh(cd_win);
     delwin(cd_win);
     
-    // wrefresh(stdscr);
     return retval;
+}
+
+void message_dialog(const char* topic, const char* message)
+{
+    bool retval;
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
+    int w_height = HEIGHT / 2;
+    int w_width = WIDTH / 2;
+    int y_win = HEIGHT / 4;
+    int x_win = WIDTH / 4;
+    WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
+    wbkgd(cd_win, COLOR_PAIR(1));
+    box(cd_win, 0, 0);
+    int line = 1;
+    mvwprintw_center(cd_win, line++, w_width, topic);
+    line++;
+    mvwprintw_center(cd_win, line++, w_width, message);
+    wrefresh(cd_win);
+    
+    getch();
+
+    wclear(cd_win);
+    wrefresh(cd_win);
+    delwin(cd_win);
 }
 
 int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
