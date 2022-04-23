@@ -265,7 +265,7 @@ char *choose_game()
     chdir("..");
     int chosen_index = choose_index(directories, dim_dir);
 
-    strcat(retval, directories[0]);
+    strcat(retval, directories[chosen_index]);
     strcat(retval, "/config.gigi");
     return retval;
 }

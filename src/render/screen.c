@@ -171,7 +171,7 @@ void render_map(WINDOW *win, game_map_t *map)
     wrefresh(win);
 }
 
-int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n)
+int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
 {
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
@@ -180,20 +180,65 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n)
     WINDOW *choose_game_win = newwin(win_height, win_width,
                                      HEIGHT / 5, WIDTH / 5);
     wbkgd(choose_game_win, COLOR_PAIR(1));
-    box(choose_game_win, 0, 0);
-    int line = 1;
-    mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
-    line++;
+    // box(choose_game_win, 0, 0);
+    // int line = 1;
+    // mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
+    // line++;
 
-    for(int res_index = 0; res_index < n; res_index++)
+    char c;
+    int current_choice = 0;
+    do
     {
-        mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
-        wrefresh(choose_game_win);
-    }
-    getch();
+        box(choose_game_win, 0, 0);
+        int line = 1;
+        mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
+        line++;
+
+        for (int res_index = 0; res_index < n_choices; res_index++)
+        {
+            if (res_index == current_choice)
+            {
+                wattrset(choose_game_win, COLOR_PAIR(2));
+                mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
+                wattrset(choose_game_win, COLOR_PAIR(1));
+            }
+            else
+            {
+                mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
+                // wrefresh(choose_game_win);
+            }
+            wrefresh(choose_game_win);
+        }
+        c = getch();
+        switch (c)
+        {
+        case 's':
+        {
+            current_choice = (current_choice + 1) % n_choices;
+            break;
+        }
+        case 'w':
+        {
+            current_choice = (current_choice + n_choices - 1) % n_choices;
+            break;
+        }
+        case 'q':
+        {
+            current_choice = -1;
+            // FINISH the LOOP
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+
+    } while (c != 'k');
+
     delwin(choose_game_win);
 
-    return 0;
+    return current_choice;
 }
 
 void render_main_screen(const int WIDTH, const int HEIGHT)
