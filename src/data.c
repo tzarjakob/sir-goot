@@ -1,7 +1,9 @@
-#include "data.h"
-#include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include "data.h"
+#include "log.h"
+#include "render/screen.h"
 
 int init_gmt(game_map_t *map, int width, int height)
 {
@@ -110,29 +112,43 @@ int move_hero(game_map_t *game_map, point_t *dest)
         {
             if (game_map->hero->keys > 0)
             {
-                // effectively removes the opened door
-                game_map->data[dest->y][dest->x] = EMPTY_SPACE_T;
-                game_map->hero->pos.x = dest->x;
-                game_map->hero->pos.y = dest->y;
-                retval = MOV_POSSIBLE;
-                (game_map->hero->keys)--;
+                if (confirmation_dialog("Open door", "Do you want to open the door?"))
+                {
+                    // effectively removes the opened door
+                    game_map->data[dest->y][dest->x] = EMPTY_SPACE_T;
+                    game_map->hero->pos.x = dest->x;
+                    game_map->hero->pos.y = dest->y;
+                    retval = MOV_POSSIBLE;
+                    (game_map->hero->keys)--;
+                }
             }
             else
+            {
+                // dialog
                 retval = MOV_NOT_POSSIBLE;
+            }
             break;
         }
         case DOORV_T:
         {
             if (game_map->hero->keys > 0)
             {
-                game_map->data[dest->y][dest->x] = EMPTY_SPACE_T;
-                game_map->hero->pos.x = dest->x;
-                game_map->hero->pos.y = dest->y;
-                retval = MOV_POSSIBLE;
-                (game_map->hero->keys)--;
+                if (confirmation_dialog("Open door", "Do you want to open the door?"))
+                {
+                    // effectively removes the opened door
+                    game_map->data[dest->y][dest->x] = EMPTY_SPACE_T;
+                    game_map->hero->pos.x = dest->x;
+                    game_map->hero->pos.y = dest->y;
+                    retval = MOV_POSSIBLE;
+                    (game_map->hero->keys)--;
+                }
             }
             else
+            {
+                // dialog
+                // message_dialog("Error", "You have no keys to open the door :(");
                 retval = MOV_NOT_POSSIBLE;
+            }
             break;
         }
         case GENERAL_CHEST_T:

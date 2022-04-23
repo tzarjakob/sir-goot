@@ -14,7 +14,18 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
 {
     int movement_res = move_hero(game_map, dest);
     if (movement_res == MOV_POSSIBLE)
+    {
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    }
+    // if (movement_res == MOV_POSSIBLE_REFRESH)
+    // {
+    //     render_map(map_win, game_map);
+    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    // }
+    // else if (movement_res == MOV_POSSIBLE) 
+    // {
+    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    // }
     return movement_res;
 }
 

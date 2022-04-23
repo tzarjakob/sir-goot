@@ -7,6 +7,12 @@
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
 {
+    int len = strlen(text);
+    // Multi line support
+    if (len > box_width)
+    {
+        // TODO add multi line support 
+    }
     int x = (box_width - strlen(text)) / 2;
     mvwprintw(win, line, x, text);
 }
@@ -170,6 +176,60 @@ void render_map(WINDOW *win, game_map_t *map)
         }
     }
     wrefresh(win);
+}
+
+bool confirmation_dialog(const char *title, const char *question)
+{
+    bool retval;
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
+    int w_height = HEIGHT / 2;
+    int w_width = WIDTH / 2;
+    int y_win = HEIGHT / 4;
+    int x_win = WIDTH / 4;
+    WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
+    wbkgd(cd_win, COLOR_PAIR(1));
+    box(cd_win, 0, 0);
+    int line = 1;
+    mvwprintw_center(cd_win, line++, w_width, title);
+    line++;
+    mvwprintw_center(cd_win, line++, w_width, question);
+    wrefresh(cd_win);
+    char c;
+
+    bool end = false;
+    while (!end)
+    {
+        c = getch();
+        switch (c)
+        {
+        case 'y':
+            retval = true;
+            end = true;
+            break;
+        case 'Y':
+            retval = true;
+            end = true;
+            break;
+        case 'n':
+            retval = false;
+            end = true;
+            break;
+        case 'N':
+            retval = false;
+            end = true;
+            break;
+        default:
+            break;
+        }
+    }
+
+    wclear(cd_win);
+    wrefresh(cd_win);
+    delwin(cd_win);
+    
+    // wrefresh(stdscr);
+    return retval;
 }
 
 int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)

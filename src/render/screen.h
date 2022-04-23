@@ -16,5 +16,6 @@ void show_chest(WINDOW* chest_win, game_map_t* game_map);
 void render_hero(WINDOW* map_win, hero_t* hero);
 void clear_hero_render(WINDOW* map_win, hero_t* hero);
 int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n);
+bool confirmation_dialog(const char *title, const char *question);
 
 #endif 
