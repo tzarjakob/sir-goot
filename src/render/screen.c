@@ -118,7 +118,7 @@ void show_inventory(WINDOW *inv_win, game_map_t *game_map)
     wrefresh(inv_win);
 }
 
-void show_chest(WINDOW* chest_win, game_map_t* game_map)
+void show_chest(WINDOW *chest_win, game_map_t *game_map)
 {
     refresh();
     wbkgd(chest_win, COLOR_PAIR(1));
@@ -128,12 +128,12 @@ void show_chest(WINDOW* chest_win, game_map_t* game_map)
     wrefresh(chest_win);
 }
 
-void render_hero(WINDOW* map_win, hero_t* hero)
+void render_hero(WINDOW *map_win, hero_t *hero)
 {
     render_pixel(map_win, HERO_ID_T, hero->pos.x, hero->pos.y);
     wrefresh(map_win);
 }
-void clear_hero_render(WINDOW* map_win, hero_t* hero)
+void clear_hero_render(WINDOW *map_win, hero_t *hero)
 {
     render_pixel(map_win, EMPTY_SPACE_T, hero->pos.x, hero->pos.y);
     // wrefresh(map_win);
@@ -171,16 +171,24 @@ void render_map(WINDOW *win, game_map_t *map)
     wrefresh(win);
 }
 
-
 int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n)
 {
-    WINDOW* choose_game_win = newwin(5, 5, 30, 30);
-    int res_index = 0;
-    while (res_index < n)
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
+    int win_height = HEIGHT / 2;
+    int win_width = (WIDTH * 6) / 10;
+    WINDOW *choose_game_win = newwin(win_height, win_width,
+                                     HEIGHT / 5, WIDTH / 5);
+    wbkgd(choose_game_win, COLOR_PAIR(1));
+    box(choose_game_win, 0, 0);
+    int line = 1;
+    mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
+    line++;
+
+    for(int res_index = 0; res_index < n; res_index++)
     {
-        mvwprintw_center(choose_game_win, res_index, 25, dirs[res_index]);
-        res_index++;
-        
+        mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
+        wrefresh(choose_game_win);
     }
     getch();
     delwin(choose_game_win);
