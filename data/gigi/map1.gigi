@@ -1,0 +1,6 @@
+(* First map to load *)
+$ dimensions 50 20
+$ start_p 2 1
+$ end_p 49 18
+
+$ wall 10 10 15 15

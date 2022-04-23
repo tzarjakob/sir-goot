@@ -1,6 +1,8 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
+#include <unistd.h>
 #include "log.h"
 #include "data.h"
 #include "parsing/parser.h"
@@ -8,7 +10,7 @@
 #include "render/screen.h"
 #include "parsing/loading.h"
 
-int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t* dest)
+int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
 {
     int movement_res = move_hero(game_map, dest);
     if (movement_res == MOV_POSSIBLE)
@@ -47,7 +49,8 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             refresh();
             render_map(map_win, &game_map);
             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
-            char c; int tmp = 1;
+            char c;
+            int tmp = 1;
             // GAME LOOP
             do
             {
@@ -59,7 +62,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 // render hero on the screen
                 render_hero(map_win, &hero);
                 // render_movement
-                
+
                 point_t dest;
                 point_t start;
                 int movement_res = MOV_NOT_POSSIBLE;
@@ -130,9 +133,9 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 {
                     // show inventary window -> fixed dimension
                     WINDOW *chest_win = newwin(INV_WIN_HEIGHT,
-                                             INV_WIN_WIDTH,
-                                             (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
-                                             (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                                               INV_WIN_WIDTH,
+                                               (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
+                                               (WIDTH / 2) - (INV_WIN_WIDTH / 2));
                     show_chest(chest_win, &game_map);
                     getch();
                     delwin(chest_win);
@@ -211,11 +214,61 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     return retval;
 }
 
-// receives as input the specific game to play and tells the function game_loop what is the first map to load
-/* void enter_game_path(char *path)
+bool config_file_present(struct dirent *dir)
 {
-    strcpy(path, "data/jakob/config.gigi");
-} */
+    bool retval = false;
+    DIR *subdr = opendir(dir->d_name);
+    if (subdr == NULL)
+    {
+        return retval;
+    }
+    struct dirent *file;
+    // check if in the subdir is present the config.gigi file
+    while (((file = readdir(subdr)) != NULL) && !retval)
+    {
+        if (strcmp(file->d_name, "config.gigi") == 0)
+            retval = true;
+    }
+    closedir(subdr);
+    return retval;
+}
+
+char *choose_game()
+{
+    char *retval = (char *)malloc(BUFFERSIZE * sizeof(char));
+    strcpy(retval, "data/");
+    char path[BUFFERSIZE];
+    struct dirent *de;
+    char directories[MAXIMUM_GAMES][BUFFERSIZE];
+    int dim_dir = 0;
+    DIR *dr = opendir("data/");
+    if (dr == NULL)
+    {
+        free(retval);
+        return NULL;
+    }
+    chdir("data/");
+
+    while ((de = readdir(dr)) != NULL)
+    {
+        if ((strcmp(de->d_name, "..") != 0) &&
+            (strcmp(de->d_name, ".") != 0) &&
+            (de->d_type == DT_DIR) &&
+            (config_file_present(de)) &&
+            (dim_dir < MAXIMUM_GAMES))
+        {
+            strcpy(directories[dim_dir], de->d_name);
+            ++dim_dir;
+        }
+    }
+    closedir(dr);
+    chdir("..");
+    int chosen_index = choose_index(directories, dim_dir);
+
+    strcat(retval, directories[chosen_index]);
+    strcat(retval, "/config.gigi");
+    return retval;
+}
 
 void main_screen(const int WIDTH, const int HEIGHT)
 {
@@ -231,8 +284,17 @@ void main_screen(const int WIDTH, const int HEIGHT)
         case 'l':
         {
             // TODOO add the option to choose which map to play
-            char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
+            // char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
+            char *path = choose_game();
+            if (path == NULL)
+            {
+                // display error
+                printw("ERROR");
+                getch();
+                exit(11);
+            }
             int res = game_loop(path, WIDTH, HEIGHT);
+            free(path);
             break;
         }
         case 'q':
