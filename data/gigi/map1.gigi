@@ -17,3 +17,9 @@ $ doorv 5 9
 $ doorh 3 7
 $ key 1 8
 $ gen_chest 13 13
+$ portal 12 12 data/gigi/map2.gigi
+$ next_map data/gigi/map2.gigi
+$ trap 4 4
+$ trap 4 5
+$ trap 8 16
+$ wall 14 15 16 12
