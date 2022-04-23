@@ -1,13 +1,14 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
+#include <unistd.h>
 #include "log.h"
 #include "data.h"
 #include "parsing/parser.h"
 #include "game_logic.h"
 #include "render/screen.h"
 #include "parsing/loading.h"
-#include <assert.h>
 
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
 {
@@ -213,37 +214,32 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
     return retval;
 }
 
-// receives as input the specific game to play and tells the function game_loop what is the first map to load
-/* void enter_game_path(char *path)
-{
-    strcpy(path, "data/jakob/config.gigi");
-} */
-
 bool config_file_present(struct dirent *dir)
 {
     bool retval = false;
     DIR *subdr = opendir(dir->d_name);
-    if (subdr == NULL){
-        return false;
+    if (subdr == NULL)
+    {
+        return retval;
     }
-    // assert(subdr != NULL);
     struct dirent *file;
     // check if in the subdir is present the config.gigi file
     while (((file = readdir(subdr)) != NULL) && !retval)
     {
-        if (strcmp(file->d_name, "config.gigi"))
+        if (strcmp(file->d_name, "config.gigi") == 0)
             retval = true;
     }
     closedir(subdr);
     return retval;
 }
 
-
 char *choose_game()
 {
     char *retval = (char *)malloc(BUFFERSIZE * sizeof(char));
+    strcpy(retval, "data/");
+    char path[BUFFERSIZE];
     struct dirent *de;
-    struct dirent *directories[MAXIMUM_GAMES];
+    char directories[MAXIMUM_GAMES][BUFFERSIZE];
     int dim_dir = 0;
     DIR *dr = opendir("data/");
     if (dr == NULL)
@@ -251,18 +247,26 @@ char *choose_game()
         free(retval);
         return NULL;
     }
+    chdir("data/");
 
     while ((de = readdir(dr)) != NULL)
     {
-        if (de->d_type == DT_DIR && (config_file_present(de)) && (dim_dir < MAXIMUM_GAMES))
+        if ((strcmp(de->d_name, "..") != 0) &&
+            (strcmp(de->d_name, ".") != 0) &&
+            (de->d_type == DT_DIR) &&
+            (config_file_present(de)) &&
+            (dim_dir < MAXIMUM_GAMES))
         {
-            directories[dim_dir] = de;
+            strcpy(directories[dim_dir], de->d_name);
             ++dim_dir;
         }
     }
     closedir(dr);
+    chdir("..");
     int chosen_index = choose_index(directories, dim_dir);
-    strcpy(retval, directories[chosen_index]->d_name);
+
+    strcat(retval, directories[0]);
+    strcat(retval, "/config.gigi");
     return retval;
 }
 

@@ -172,16 +172,17 @@ void render_map(WINDOW *win, game_map_t *map)
 }
 
 
-int choose_index(struct dirent** dirs, int n)
+int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n)
 {
     WINDOW* choose_game_win = newwin(5, 5, 30, 30);
     int res_index = 0;
     while (res_index < n)
     {
-        mvwprintw_center(choose_game_win, res_index, 25, dirs[res_index]->d_name);
+        mvwprintw_center(choose_game_win, res_index, 25, dirs[res_index]);
         res_index++;
-        getch();
+        
     }
+    getch();
     delwin(choose_game_win);
 
     return 0;
