@@ -96,7 +96,14 @@ int move_hero(game_map_t *game_map, point_t *dest)
         }
         case ENDING_P:
         {
-            retval = MOV_WIN;
+            if (confirmation_dialog("Go forward?", "Do you want to go forward?"))
+            {
+                retval = MOV_WIN;
+            }
+            else
+            {
+                retval = MOV_NOT_POSSIBLE;
+            }
             break;
         }
         case KEY_T:

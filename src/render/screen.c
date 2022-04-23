@@ -194,6 +194,8 @@ bool confirmation_dialog(const char *title, const char *question)
     mvwprintw_center(cd_win, line++, w_width, title);
     line++;
     mvwprintw_center(cd_win, line++, w_width, question);
+    line++;
+    mvwprintw_center(cd_win, line++, w_width, "[Press y or n]");
     wrefresh(cd_win);
     char c;
 
@@ -247,6 +249,8 @@ void message_dialog(const char* topic, const char* message)
     mvwprintw_center(cd_win, line++, w_width, topic);
     line++;
     mvwprintw_center(cd_win, line++, w_width, message);
+    
+    
     wrefresh(cd_win);
     
     getch();
