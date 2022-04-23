@@ -1,0 +1,9 @@
+$ dimensions 17 20
+$ start_p 1 1
+$end_p 15 15
+
+$ wall 11 11 19 19
+$ trap 3 2
+$ trap 3 3
+$ trap 3 4
+$ next_map ___ 
