@@ -1,10 +1,10 @@
 (* First map to load *)
-$ dimensions 17 20
+$ dimensions 20 20
 $ start_p 1 1
 $ end_p 15 15
 $ next_map ___
 
-$ wall 11 11 19 19
+(* $ wall 11 11 19 19 *)
 $ wall 0 7 3 8
 $ wall 4 7 17 8
 $ wall 5 8 6 9
@@ -22,4 +22,14 @@ $ next_map data/gigi/map2.gigi
 $ trap 4 4
 $ trap 4 5
 $ trap 8 16
-$ wall 14 15 16 12
+$ wall 14 12 16 15
+$ trap 9 16
+$ trap 4 6
+$ trap 14 14
+$ trap 14 15
+$ trap 16 16
+$ wall 13 14 14 17
+$ wall 14 13 16 14
+$ wall 16 13 17 18
+$ wall 13 18 17 19
+$ doorv 13 17 
