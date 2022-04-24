@@ -75,6 +75,23 @@ int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y)
     return retval;
 }
 
+char *destination_right_portal(game_map_t *game_map, point_t *dest)
+{
+    int n_port = game_map->n_portals;
+    char *result;
+    bool end = false;
+    for (int i = 0; i < n_port && !end; ++i)
+    {
+        if ((game_map->portals[i].pos.x == dest->x) &&
+            (game_map->portals[i].pos.y == dest->y))
+        {
+            end = true;
+            result = game_map->portals[i].path;
+        }
+    }
+    return result;
+}
+
 // 0 -> wall, 1->movement possible, -2 if wins, return -1 if dead
 int move_hero(game_map_t *game_map, point_t *dest)
 {
@@ -184,7 +201,14 @@ int move_hero(game_map_t *game_map, point_t *dest)
         }
         case PORTAL_T:
         {
-            retval = MOV_PORTAL;
+            if (confirmation_dialog("Portal usage", "Do you want to use this portal?"))
+            {
+                retval = MOV_PORTAL;
+            }
+            else
+            {
+                retval = MOV_NOT_POSSIBLE;
+            }
             break;
         }
         case EMPTY_SPACE_T:

@@ -47,7 +47,7 @@
 
 #define BUFFERSIZE 256
 
-#define STAT_WIN_WIDTH 30
+#define STAT_WIN_WIDTH 22
 #define INV_WIN_WIDTH 30
 #define INV_WIN_HEIGHT 20
 
@@ -120,5 +120,6 @@ int deinit_gmt(game_map_t *);
 int add_to_map_rect(game_map_t *game_map, unsigned char type, int tlx, int tly, int brx, int bry);
 int add_to_map_point(game_map_t *game_map, unsigned char type, int x, int y);
 int move_hero(game_map_t *game_map, point_t *dest);
+char *destination_right_portal(game_map_t *game_map, point_t *dest);
 
 #endif

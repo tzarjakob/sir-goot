@@ -10,6 +10,26 @@
 #include "render/screen.h"
 #include "parsing/loading.h"
 
+/*
+Using this leads to segmentation fault.
+I assume because newwin allocates on the stack and not on the heap
+void init_map(WINDOW* map_win, WINDOW* stat_win, const int HEIGHT, const int WIDTH, game_map_t* game_map)
+{
+    map_win = newwin(game_map->e_height + 2,
+                     game_map->e_width + 2,
+                     ((HEIGHT / 2) - (game_map->e_height / 2)) - 2,
+                     ((WIDTH / 2) - (game_map->e_width / 2)) - (STAT_WIN_WIDTH / 2));
+    stat_win = newwin(game_map->e_height + 2,
+                      STAT_WIN_WIDTH,
+                      ((HEIGHT / 2) - (game_map->e_height / 2)) - 2,
+                      ((WIDTH / 2) + (game_map->e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
+    refresh();
+    // box(map_win, 0, 0);
+    // wrefresh(map_win);
+    render_map(map_win, game_map);
+    render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+} */
+
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
 {
     int movement_res = move_hero(game_map, dest);
@@ -18,8 +38,15 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
     //     render_map(map_win, game_map);
     //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     // }
-    render_map(map_win, game_map);
-    render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    if (movement_res == MOV_PORTAL)
+    {
+    }
+    else
+    {
+        render_map(map_win, game_map);
+        render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    }
+
     // if (movement_res == MOV_POSSIBLE_REFRESH)
     // {
     //     render_map(map_win, game_map);
@@ -63,6 +90,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             refresh();
             render_map(map_win, &game_map);
             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+            // init_map(map_win, stat_win, HEIGHT, WIDTH, &game_map);
             char c;
             int tmp = 1;
             // GAME LOOP
@@ -161,7 +189,40 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 }
                 case MOV_PORTAL:
                 {
-                    // retrieve path
+                    // clear();
+                    char new_path_map[BUFFERSIZE];
+                    strcpy(new_path_map, destination_right_portal(&game_map, &dest));
+                    deinit_gmt(&game_map);
+
+                    if (load_game_map(map_win, &game_map, new_path_map, WIDTH, HEIGHT) != 1)
+                    {
+                        message_dialog("Loading map error", "Could not open map");
+                        c = 'q';
+                        clear();
+                        delwin(map_win);
+                        delwin(stat_win);
+                        deinit_gmt(&game_map);
+                    }
+                    else
+                    {
+                        clear();
+                        delwin(map_win);
+                        delwin(stat_win);
+                        map_win = newwin(game_map.e_height + 2,
+                                         game_map.e_width + 2,
+                                         ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                                         ((WIDTH / 2) - (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2));
+                        stat_win = newwin(game_map.e_height + 2,
+                                          STAT_WIN_WIDTH,
+                                          ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
+                                          ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
+                        refresh();
+                        box(map_win, 0, 0);
+                        wrefresh(map_win);
+                        render_map(map_win, &game_map);
+                        render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                    }
+
                     break;
                 }
                 case MOV_DEAD:
@@ -181,7 +242,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         delwin(map_win);
                         deinit_gmt(&game_map);
                         clear();
-                        
                     }
                     else
                     {
@@ -210,6 +270,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                             wrefresh(map_win);
                             render_map(map_win, &game_map);
                             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                            // init_map(map_win, stat_win, HEIGHT, WIDTH, &game_map);
                         }
                     }
                     break;
@@ -311,6 +372,10 @@ void main_screen(const int WIDTH, const int HEIGHT)
             if (path != NULL)
             {
                 int res = game_loop(path, WIDTH, HEIGHT);
+                if (res == -1)
+                {
+                    message_dialog("General errors", "Errors in game loop");
+                }
                 free(path);
             }
             break;
