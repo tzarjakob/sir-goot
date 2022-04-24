@@ -4,7 +4,7 @@ $ start_p 1 1
 $ end_p 15 15
 $ next_map ___
 
-$ portal 2 2 gigi
+$ portal 2 2 data/gigi/map2.gigi
 
 $ wall 11 11 19 19
 $ wall 0 7 3 8
