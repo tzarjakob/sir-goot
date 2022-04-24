@@ -18,8 +18,16 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
     //     render_map(map_win, game_map);
     //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     // }
-    render_map(map_win, game_map);
-    render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    if (movement_res == MOV_PORTAL)
+    {
+        
+    }
+    else
+    {
+        render_map(map_win, game_map);
+        render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+    }
+
     // if (movement_res == MOV_POSSIBLE_REFRESH)
     // {
     //     render_map(map_win, game_map);
@@ -161,7 +169,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 }
                 case MOV_PORTAL:
                 {
-                    // retrieve path
+
                     break;
                 }
                 case MOV_DEAD:
@@ -181,7 +189,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                         delwin(map_win);
                         deinit_gmt(&game_map);
                         clear();
-                        
                     }
                     else
                     {

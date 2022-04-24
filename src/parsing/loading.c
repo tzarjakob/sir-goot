@@ -67,6 +67,7 @@ int load_game_map(WINDOW *map_win, game_map_t *game_map, const char *path, const
     game_map->e_width = -1;
     game_map->n_ghosts = 0;
     game_map->n_zombies = 0;
+    game_map->n_portals = 0;
     FILE *game_file = fopen(path, "r");
     if (game_file == NULL)
     {
