@@ -2,7 +2,7 @@
 $ dimensions 17 20
 $ start_p 1 1
 $ end_p 15 15
-
+$ next_map ___
 
 $ wall 11 11 19 19
 $ wall 0 7 3 8

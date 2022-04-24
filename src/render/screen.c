@@ -249,7 +249,8 @@ void message_dialog(const char* topic, const char* message)
     mvwprintw_center(cd_win, line++, w_width, topic);
     line++;
     mvwprintw_center(cd_win, line++, w_width, message);
-    
+    line++;
+    mvwprintw_center(cd_win, line++, w_width, "Press a key to continue");
     
     wrefresh(cd_win);
     
