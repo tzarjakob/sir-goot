@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME}
     src/parsing/aux.c
     src/render/screen.c 
     src/logic/movements.c
+    src/render/effects.c
 )
 target_link_libraries(${PROJECT_NAME}
     ncurses
