@@ -7,7 +7,7 @@ $ next_map ___
 (* $ wall 11 11 19 19 *)
 $ portal 2 2 data/gigi/map2.gigi
 
-$ wall 11 11 19 19
+
 $ wall 0 7 3 8
 $ wall 4 7 17 8
 $ wall 5 8 6 9
@@ -36,3 +36,4 @@ $ wall 14 13 16 14
 $ wall 16 13 17 18
 $ wall 13 18 17 19
 $ doorv 13 17 
+$ key 13 18

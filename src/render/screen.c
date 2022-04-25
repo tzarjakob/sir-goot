@@ -337,13 +337,16 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
 
 void render_main_screen(const int WIDTH, const int HEIGHT)
 {
+    // move in a more convenient place if anything breaks
     start_color();
     init_pair(1, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(2, COLOR_BLUE, COLOR_YELLOW);
+    init_pair(2, COLOR_GREEN, COLOR_MAGENTA);
     bkgd(COLOR_PAIR(1));
     int line = 4;
     box(stdscr, 0, 0);
+    attron(A_BOLD);
     mvwprintw_center(stdscr, line++, WIDTH, "This is the main screen");
+    attroff(A_BOLD);
     mvwprintw_center(stdscr, line++, WIDTH, "Press l to load a game");
     mvwprintw_center(stdscr, line++, WIDTH, "Press q to quit");
 }

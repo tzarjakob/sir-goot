@@ -27,7 +27,12 @@ $ doorv 17 0
 $ wall 19 0 20 3
 $ doorv 19 3
 
-(* Magical chests at the extreme right of the map *)
+(* Magical chests at the extreme right of the map 
+
+ code computer:10101492*)
+
+
+
 
 (* Food chest at the bottom left corner *)
 $ doorv 8 3
@@ -38,3 +43,4 @@ $ wall 11 4 25 5
 
 
 $ next_map ___ 
+
