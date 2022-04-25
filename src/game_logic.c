@@ -238,7 +238,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                     if (strcmp(game_map.next_map, "___") == 0)
                     {
                         c = 'q';
-                        message_dialog("YOU WON", "You won the game, my friend!");
+                        message_dialog("complimenti!", "sei soppravissuto/a!!!!!!");
                         delwin(map_win);
                         deinit_gmt(&game_map);
                         clear();
