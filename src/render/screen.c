@@ -352,8 +352,8 @@ char render_main_screen(const int WIDTH, const int HEIGHT)
 {
     char retval = 0;
     // move in a more convenient place if anything breaks
-    int tw_width = WIDTH / 2;
-    int tw_height = HEIGHT / 2;
+    int tw_width = WIDTH / 4;
+    int tw_height = HEIGHT / 4;
     int tw_x = (WIDTH * 3) / 8;
     int tw_y = (HEIGHT * 3) / 8;
     WINDOW *text_win = newwin(tw_height, tw_width, tw_y, tw_x);
@@ -386,7 +386,7 @@ char render_main_screen(const int WIDTH, const int HEIGHT)
         wrefresh(text_win);
     } while ((retval = getch()) == ERR);
     nodelay(text_win, FALSE);
-    // nodelay(stdscr, FALSE);
+    nodelay(stdscr, FALSE);
     delwin(text_win);
     return retval;
 }

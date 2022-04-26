@@ -30,35 +30,20 @@ void init_map(WINDOW* map_win, WINDOW* stat_win, const int HEIGHT, const int WID
     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
 } */
 
+
+// TODO fix this function and the return value of move_hero function
+// -> hero movement -> only delete the char and add the char; else -> render everything
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
 {
     int movement_res = move_hero(game_map, dest);
-    // if (movement_res == MOV_POSSIBLE)
-    // {
-    //     render_map(map_win, game_map);
-    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
-    // }
     if (movement_res == MOV_PORTAL)
     {
     }
     else
     {
-        // wclear(stdscr);
-        // wrefresh(stdscr);
-        
         render_map(map_win, game_map);
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
-
-    // if (movement_res == MOV_POSSIBLE_REFRESH)
-    // {
-    //     render_map(map_win, game_map);
-    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
-    // }
-    // else if (movement_res == MOV_POSSIBLE)
-    // {
-    //     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
-    // }
     return movement_res;
 }
 
@@ -93,20 +78,13 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
             refresh();
             render_map(map_win, &game_map);
             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
-            // init_map(map_win, stat_win, HEIGHT, WIDTH, &game_map);
             char c;
             int tmp = 1;
             // GAME LOOP
             do
             {
                 noecho();
-                // add no delay
-                // TODO adding the nodelay and the timeout options causes the inv_win to disappear in GAME_SPEED time
-                // nodelay(map_win, true);
-                // timeout(GAME_SPEED);
-                // render hero on the screen
                 render_hero(map_win, &hero);
-                // render_movement
 
                 point_t dest;
                 point_t start;
@@ -273,7 +251,6 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                             wrefresh(map_win);
                             render_map(map_win, &game_map);
                             render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
-                            // init_map(map_win, stat_win, HEIGHT, WIDTH, &game_map);
                         }
                     }
                     break;
@@ -364,13 +341,10 @@ void main_screen(const int WIDTH, const int HEIGHT)
         noecho();
         clear();
         c = render_main_screen(WIDTH, HEIGHT);
-        // c = getch();
         switch (c)
         {
         case 'l':
         {
-            // TODOO add the option to choose which map to play
-            // char path[BUFFERSIZE] = CONFIG_INITIAL_PATH;
             char *path = choose_game();
             if (path != NULL)
             {

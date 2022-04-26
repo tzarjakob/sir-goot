@@ -7,7 +7,7 @@
 int wlog(const char *topic, const char *text)
 {
     FILE *log_file = fopen("log/main.log", "a");
-    if (log_file < 0)
+    if (log_file == NULL)
     {
         return -1;
     }
@@ -18,7 +18,7 @@ int wlog(const char *topic, const char *text)
 int wlog_int(const char *topic, int x)
 {
     FILE *log_file = fopen("log/main.log", "a");
-    if (log_file < 0)
+    if (log_file == NULL)
     {
         return -1;
     }
