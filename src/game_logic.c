@@ -43,6 +43,9 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
     }
     else
     {
+        // wclear(stdscr);
+        // wrefresh(stdscr);
+        
         render_map(map_win, game_map);
         render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
     }
@@ -228,7 +231,7 @@ int game_loop(const char *path, int WIDTH, int HEIGHT)
                 case MOV_DEAD:
                 {
                     c = 'q';
-
+                    message_dialog("Lost", "You lost man :(");
                     delwin(map_win);
                     deinit_gmt(&game_map);
                     break;
@@ -360,8 +363,8 @@ void main_screen(const int WIDTH, const int HEIGHT)
     {
         noecho();
         clear();
-        render_main_screen(WIDTH, HEIGHT);
-        c = getch();
+        c = render_main_screen(WIDTH, HEIGHT);
+        // c = getch();
         switch (c)
         {
         case 'l':
@@ -381,7 +384,10 @@ void main_screen(const int WIDTH, const int HEIGHT)
             break;
         }
         case 'q':
-            // quitting...
+            if (!confirmation_dialog("Exit", "Do you really want to exit?"))
+            {
+                c = ' ';
+            }
             break;
         default:
             break;

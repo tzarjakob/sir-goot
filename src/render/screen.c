@@ -11,10 +11,19 @@ void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
     // Multi line support
     if (len > box_width)
     {
-        // TODO add multi line support 
+        mvwprintw(win, line, 1, "Text too long, not supported");
+        // char tmp[box_width];
+        // strncpy(tmp, text, box_width - 3);
+        // tmp[box_width - 3] = '.';
+        // tmp[box_width - 2] = '.';
+        // tmp[box_width - 1] = 0;
+        // mvwprintw_center(win, ++line, box_width, tmp);
     }
-    int x = (box_width - strlen(text)) / 2;
-    mvwprintw(win, line, x, text);
+    else
+    {
+        int x = (box_width - strlen(text)) / 2;
+        mvwprintw(win, line, x, text);
+    }
 }
 
 void render_pixel(WINDOW *win, unsigned char c, int width, int height)
@@ -183,12 +192,12 @@ bool confirmation_dialog(const char *title, const char *question)
     bool retval;
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
-    int w_height = HEIGHT / 2;
-    int w_width = WIDTH / 2;
-    int y_win = HEIGHT / 4;
-    int x_win = WIDTH / 4;
+    int w_height = HEIGHT / 4;
+    int w_width = WIDTH / 4;
+    int y_win = (HEIGHT * 3) / 8;
+    int x_win = (WIDTH * 3) / 8;
     WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
-    wbkgd(cd_win, COLOR_PAIR(1));
+    wbkgd(cd_win, COLOR_PAIR(2));
     box(cd_win, 0, 0);
     int line = 1;
     mvwprintw_center(cd_win, line++, w_width, title);
@@ -225,25 +234,27 @@ bool confirmation_dialog(const char *title, const char *question)
             break;
         }
     }
+    // strategy to clean the screen
+    wbkgd(cd_win, COLOR_PAIR(1));
 
     wclear(cd_win);
     wrefresh(cd_win);
     delwin(cd_win);
-    
+
     return retval;
 }
 
-void message_dialog(const char* topic, const char* message)
+void message_dialog(const char *topic, const char *message)
 {
     bool retval;
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
-    int w_height = HEIGHT / 2;
-    int w_width = WIDTH / 2;
-    int y_win = HEIGHT / 4;
-    int x_win = WIDTH / 4;
+    int w_height = HEIGHT / 4;
+    int w_width = WIDTH / 4;
+    int y_win = (HEIGHT*3) / 8;
+    int x_win = (WIDTH*3) / 8;
     WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
-    wbkgd(cd_win, COLOR_PAIR(1));
+    wbkgd(cd_win, COLOR_PAIR(2));
     box(cd_win, 0, 0);
     int line = 1;
     mvwprintw_center(cd_win, line++, w_width, topic);
@@ -251,11 +262,12 @@ void message_dialog(const char* topic, const char* message)
     mvwprintw_center(cd_win, line++, w_width, message);
     line++;
     mvwprintw_center(cd_win, line++, w_width, "Press a key to continue");
-    
     wrefresh(cd_win);
-    
+
+
     getch();
 
+    wbkgd(cd_win, COLOR_PAIR(1));
     wclear(cd_win);
     wrefresh(cd_win);
     delwin(cd_win);
@@ -335,18 +347,35 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
     return current_choice;
 }
 
-void render_main_screen(const int WIDTH, const int HEIGHT)
+char render_main_screen(const int WIDTH, const int HEIGHT)
 {
+    char retval;
     // move in a more convenient place if anything breaks
+    int tw_width = WIDTH / 4;
+    int tw_height = HEIGHT / 4;
+    int tw_x = (WIDTH * 3) / 8;
+    int tw_y = (HEIGHT * 3) / 8;
+    WINDOW *text_win = newwin(tw_height, tw_width, tw_y, tw_x);
+
     start_color();
-    init_pair(1, COLOR_BLACK, COLOR_YELLOW);
-    init_pair(2, COLOR_GREEN, COLOR_MAGENTA);
+    init_pair(1, COLOR_BLACK, COLOR_GREEN);
+    init_pair(2, COLOR_WHITE, COLOR_BLUE);
+    init_pair(3, COLOR_WHITE, COLOR_RED);
     bkgd(COLOR_PAIR(1));
-    int line = 4;
-    box(stdscr, 0, 0);
-    attron(A_BOLD);
-    mvwprintw_center(stdscr, line++, WIDTH, "This is the main screen");
-    attroff(A_BOLD);
-    mvwprintw_center(stdscr, line++, WIDTH, "Press l to load a game");
-    mvwprintw_center(stdscr, line++, WIDTH, "Press q to quit");
+    refresh();
+
+    wbkgd(text_win, COLOR_PAIR(3));
+    int line = 2;
+    box(text_win, 0, 0);
+    wattron(text_win, A_BOLD);
+    mvwprintw_center(text_win, line++, tw_width, "This is the main screen");
+    wattroff(text_win, A_BOLD);
+    line++;
+    mvwprintw_center(text_win, line++, tw_width, "Press l to load a game");
+    mvwprintw_center(text_win, line++, tw_width, "Press q to quit");
+    wrefresh(text_win);
+    // effects ...
+    retval = getch();
+    delwin(text_win);
+    return retval;
 }
