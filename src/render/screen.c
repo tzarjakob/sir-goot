@@ -1,9 +1,10 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdbool.h>
+#include <dirent.h>
 #include "screen.h"
 #include "../log.h"
-#include <dirent.h>
+#include "effects.h"
 
 void mvwprintw_center(WINDOW *win, int line, int box_width, const char *text)
 {
@@ -349,10 +350,10 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
 
 char render_main_screen(const int WIDTH, const int HEIGHT)
 {
-    char retval;
+    char retval = 0;
     // move in a more convenient place if anything breaks
-    int tw_width = WIDTH / 4;
-    int tw_height = HEIGHT / 4;
+    int tw_width = WIDTH / 2;
+    int tw_height = HEIGHT / 2;
     int tw_x = (WIDTH * 3) / 8;
     int tw_y = (HEIGHT * 3) / 8;
     WINDOW *text_win = newwin(tw_height, tw_width, tw_y, tw_x);
@@ -375,7 +376,17 @@ char render_main_screen(const int WIDTH, const int HEIGHT)
     mvwprintw_center(text_win, line++, tw_width, "Press q to quit");
     wrefresh(text_win);
     // effects ...
-    retval = getch();
+
+    nodelay(text_win, TRUE);
+    // nodelay(stdscr, TRUE);
+    timeout(1000);
+    do 
+    {
+        // effects
+        wrefresh(text_win);
+    } while ((retval = getch()) == ERR);
+    nodelay(text_win, FALSE);
+    // nodelay(stdscr, FALSE);
     delwin(text_win);
     return retval;
 }
