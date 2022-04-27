@@ -47,8 +47,10 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
     return movement_res;
 }
 
-int game_loop(const char *path, int WIDTH, int HEIGHT)
+int game_loop(const char *path)
 {
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
     int retval = 1;
     clear();
     config_t config;
@@ -333,14 +335,16 @@ char *choose_game()
     }
 }
 
-void main_screen(const int WIDTH, const int HEIGHT)
+void main_screen()
 {
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
     char c;
     do
     {
         noecho();
         clear();
-        c = render_main_screen(WIDTH, HEIGHT);
+        c = render_main_screen();
         switch (c)
         {
         case 'l':
@@ -348,7 +352,7 @@ void main_screen(const int WIDTH, const int HEIGHT)
             char *path = choose_game();
             if (path != NULL)
             {
-                int res = game_loop(path, WIDTH, HEIGHT);
+                int res = game_loop(path);
                 if (res == -1)
                 {
                     message_dialog("General errors", "Errors in game loop");

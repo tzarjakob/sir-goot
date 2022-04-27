@@ -348,8 +348,10 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
     return current_choice;
 }
 
-char render_main_screen(const int WIDTH, const int HEIGHT)
+char render_main_screen()
 {
+    int WIDTH, HEIGHT;
+    getmaxyx(stdscr, HEIGHT, WIDTH);
     char retval = 0;
     // move in a more convenient place if anything breaks
     int tw_width = WIDTH / 4;
@@ -358,10 +360,7 @@ char render_main_screen(const int WIDTH, const int HEIGHT)
     int tw_y = (HEIGHT * 3) / 8;
     WINDOW *text_win = newwin(tw_height, tw_width, tw_y, tw_x);
 
-    start_color();
-    init_pair(1, COLOR_BLACK, COLOR_GREEN);
-    init_pair(2, COLOR_WHITE, COLOR_BLUE);
-    init_pair(3, COLOR_WHITE, COLOR_RED);
+    
     bkgd(COLOR_PAIR(1));
     refresh();
 

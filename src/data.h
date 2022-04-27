@@ -1,11 +1,22 @@
 #ifndef DATA_H
 #define DATA_H
 
+
+#define MIN_WIDTH 60
+#define MIN_HEIGHT 15
 #define MAX_WIDTH 200
 #define MAX_HEIGHT 50
 // timeout of each frame
 #define GAME_SPEED 1000
 #define MAXIMUM_GAMES 10
+
+
+/* COLORS */
+#define WHITE_BLACK_THEME 1
+#define BLACK_WHITE_THEME 2
+#define BLUE 3
+#define BLACK_YELLOW_THEME 4
+#define WHITE_RED_THEME 5
 
 // data types in the map
 #define EMPTY_SPACE_T (unsigned char)0
