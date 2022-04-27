@@ -10,6 +10,8 @@
 #define GAME_SPEED 1000
 #define MAXIMUM_GAMES 10
 
+#define UPDATE_STAT_WIN 100
+
 
 /* COLORS */
 #define WHITE_BLACK_THEME 1
@@ -58,7 +60,7 @@
 
 #define BUFFERSIZE 256
 
-#define STAT_WIN_WIDTH 22
+#define STAT_WIN_WIDTH 50
 #define INV_WIN_WIDTH 30
 #define INV_WIN_HEIGHT 20
 

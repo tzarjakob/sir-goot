@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <dirent.h>
+#include <time.h>
 #include "screen.h"
 #include "../log.h"
 #include "effects.h"
@@ -156,21 +157,36 @@ void clear_hero_render(WINDOW *map_win, hero_t *hero)
     // wrefresh(map_win);
 }
 
-void render_stat_map(WINDOW *stat_win, game_map_t *game_map, int width)
+void render_stat_map(WINDOW *stat_win, game_map_t *game_map)
 {
+    // updating every second
+    timeout(UPDATE_STAT_WIN);
+    int HEIGHT, unused_width;
+    getmaxyx(stat_win, HEIGHT, unused_width);
     wclear(stat_win);
     wbkgd(stat_win, COLOR_PAIR(1));
-    box(stat_win, 0, 0);
     // wrefresh(stat_win);
     int line = 1;
-    mvwprintw_center(stat_win, line++, width, "STATISTICS");
+    mvwprintw_center(stat_win, line++, STAT_WIN_WIDTH, "STATISTICS");
     int lives = game_map->hero->lives;
     int keys = game_map->hero->keys;
     int exp = game_map->hero->experience;
+    const int spacing = 3;
     line++;
-    mvwprintw(stat_win, line++, 3, "Lives: \t %d", lives);
-    mvwprintw(stat_win, line++, 3, "Keys: \t %d", keys);
-    mvwprintw(stat_win, line++, 3, "Experience: \t %d", exp);
+    mvwprintw(stat_win, line++, spacing, "Lives: \t %d", lives);
+    mvwprintw(stat_win, line++, spacing, "Keys: \t %d", keys);
+    mvwprintw(stat_win, line++, spacing, "Experience: \t %d", exp);
+
+    // at the end of the window add general info, the time and the date
+    
+    time_t now = time(NULL);
+    char* time_str = ctime(&now);
+    mvwprintw_center(stat_win, HEIGHT - 3, STAT_WIN_WIDTH, time_str);
+    // mvwprintw(stat_win, HEIGHT - 3, spacing, "%s", ctime(&now));
+    mvwprintw_center(stat_win, HEIGHT - 4, STAT_WIN_WIDTH, "sir-goot game");
+    // mvwprintw_center(stat_win, HEIGHT-3, STAT_WIN_WIDTH, "%E", now);
+    box(stat_win, 0, 0);
+
     wrefresh(stat_win);
 }
 
@@ -252,8 +268,8 @@ void message_dialog(const char *topic, const char *message)
     getmaxyx(stdscr, HEIGHT, WIDTH);
     int w_height = HEIGHT / 4;
     int w_width = WIDTH / 4;
-    int y_win = (HEIGHT*3) / 8;
-    int x_win = (WIDTH*3) / 8;
+    int y_win = (HEIGHT * 3) / 8;
+    int x_win = (WIDTH * 3) / 8;
     WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
     wbkgd(cd_win, COLOR_PAIR(2));
     box(cd_win, 0, 0);
@@ -264,7 +280,6 @@ void message_dialog(const char *topic, const char *message)
     line++;
     mvwprintw_center(cd_win, line++, w_width, "Press a key to continue");
     wrefresh(cd_win);
-
 
     getch();
 
@@ -360,7 +375,6 @@ char render_main_screen()
     int tw_y = (HEIGHT * 3) / 8;
     WINDOW *text_win = newwin(tw_height, tw_width, tw_y, tw_x);
 
-    
     bkgd(COLOR_PAIR(1));
     refresh();
 
@@ -379,7 +393,7 @@ char render_main_screen()
     nodelay(text_win, TRUE);
     // nodelay(stdscr, TRUE);
     timeout(1000);
-    do 
+    do
     {
         // effects
         wrefresh(text_win);

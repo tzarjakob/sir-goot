@@ -30,7 +30,6 @@ void init_map(WINDOW* map_win, WINDOW* stat_win, const int HEIGHT, const int WID
     render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
 } */
 
-
 // TODO fix this function and the return value of move_hero function
 // -> hero movement -> only delete the char and add the char; else -> render everything
 int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, point_t *dest)
@@ -42,7 +41,7 @@ int handle_movements(WINDOW *map_win, WINDOW *stat_win, game_map_t *game_map, po
     else
     {
         render_map(map_win, game_map);
-        render_stat_map(stat_win, game_map, STAT_WIN_WIDTH);
+        // render_stat_map(stat_win, game_map);
     }
     return movement_res;
 }
@@ -59,6 +58,7 @@ int game_loop(const char *path)
     {
         WINDOW *map_win;
         WINDOW *stat_win;
+        // nodelay(stat_win, TRUE);
         game_map_t game_map;
         hero_t hero;
         hero.experience = INITIAL_EXP;
@@ -77,9 +77,10 @@ int game_loop(const char *path)
                               STAT_WIN_WIDTH,
                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
                               ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
+            nodelay(stat_win, TRUE);
             refresh();
             render_map(map_win, &game_map);
-            render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+            // render_stat_map(stat_win, &game_map);
             char c;
             int tmp = 1;
             // GAME LOOP
@@ -87,6 +88,7 @@ int game_loop(const char *path)
             {
                 noecho();
                 render_hero(map_win, &hero);
+                render_stat_map(stat_win, &game_map);
 
                 point_t dest;
                 point_t start;
@@ -110,13 +112,22 @@ int game_loop(const char *path)
                     wclear(stdscr);
                     refresh();
                     render_map(map_win, &game_map);
-                    render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                    // render_stat_map(stat_win, &game_map);
                     break;
                 }
                 case 'q':
                 {
-                    delwin(map_win);
-                    deinit_gmt(&game_map);
+                    if (confirmation_dialog("Exit", "Do you want to exit the game?"))
+                    {
+                        delwin(map_win);
+                        deinit_gmt(&game_map);
+                    }
+                    else
+                    {
+                        render_map(map_win, &game_map);
+                        // render_stat_map(stat_win, &game_map);
+                        c = ERR;
+                    }
                     break;
                 }
                 // Movements
@@ -167,7 +178,7 @@ int game_loop(const char *path)
                     wclear(stdscr);
                     refresh();
                     render_map(map_win, &game_map);
-                    render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                    // render_stat_map(stat_win, &game_map);
                     break;
                 }
                 case MOV_PORTAL:
@@ -199,11 +210,12 @@ int game_loop(const char *path)
                                           STAT_WIN_WIDTH,
                                           ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
                                           ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
+                        nodelay(stat_win, TRUE);
                         refresh();
                         box(map_win, 0, 0);
                         wrefresh(map_win);
                         render_map(map_win, &game_map);
-                        render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                        // render_stat_map(stat_win, &game_map);
                     }
 
                     break;
@@ -248,11 +260,12 @@ int game_loop(const char *path)
                                               STAT_WIN_WIDTH,
                                               ((HEIGHT / 2) - (game_map.e_height / 2)) - 2,
                                               ((WIDTH / 2) + (game_map.e_width / 2)) - (STAT_WIN_WIDTH / 2) + 2);
+                            nodelay(stat_win, TRUE);
                             refresh();
                             box(map_win, 0, 0);
                             wrefresh(map_win);
                             render_map(map_win, &game_map);
-                            render_stat_map(stat_win, &game_map, STAT_WIN_WIDTH);
+                            // render_stat_map(stat_win, &game_map);
                         }
                     }
                     break;
