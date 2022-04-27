@@ -18,9 +18,9 @@ int main()
     else
     {
         start_color();
-        init_pair(BLACK_WHITE_THEME, COLOR_BLACK, COLOR_WHITE);
-        init_pair(WHITE_BLACK_THEME, COLOR_WHITE, COLOR_BLACK);
-        init_pair(BLUE, COLOR_WHITE, COLOR_BLUE);
+        init_pair(MAIN_THEME, COLOR_BLACK, COLOR_YELLOW);
+        init_pair(SECONDARY_THEME, COLOR_BLACK, COLOR_BLUE);
+        init_pair(MAIN_SCREEN_THEME, COLOR_BLACK, COLOR_WHITE);
         main_screen();
         endwin();
     }

@@ -223,6 +223,7 @@ int game_loop(const char *path)
                 case MOV_DEAD:
                 {
                     c = 'q';
+                    // nodelay(stat_win, FALSE);
                     message_dialog("Lost", "You lost man :(");
                     delwin(map_win);
                     deinit_gmt(&game_map);

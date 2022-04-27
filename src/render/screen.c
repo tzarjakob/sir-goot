@@ -271,6 +271,8 @@ void message_dialog(const char *topic, const char *message)
     int y_win = (HEIGHT * 3) / 8;
     int x_win = (WIDTH * 3) / 8;
     WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
+    timeout(MAX_TIME_DIALOG_DURATION);
+    // nodelay(cd_win, FALSE);
     wbkgd(cd_win, COLOR_PAIR(2));
     box(cd_win, 0, 0);
     int line = 1;
