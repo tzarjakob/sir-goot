@@ -395,10 +395,17 @@ char render_main_screen()
     nodelay(text_win, TRUE);
     // nodelay(stdscr, TRUE);
     timeout(1000);
+    size_t time = 0;
     do
     {
+        time = time % 300;
+        if (effect1(stdscr, time) == -1)
+        {
+            message_dialog("Error", "effect 1 not working");
+        }
         // effects
         wrefresh(text_win);
+        time++;
     } while ((retval = getch()) == ERR);
     nodelay(text_win, FALSE);
     nodelay(stdscr, FALSE);

@@ -19,7 +19,7 @@ int main()
     {
         start_color();
         init_pair(MAIN_THEME, COLOR_BLACK, COLOR_YELLOW);
-        init_pair(SECONDARY_THEME, COLOR_BLACK, COLOR_BLUE);
+        init_pair(SECONDARY_THEME, COLOR_BLACK, COLOR_GREEN);
         init_pair(MAIN_SCREEN_THEME, COLOR_BLACK, COLOR_WHITE);
         main_screen();
         endwin();
