@@ -160,7 +160,7 @@ void clear_hero_render(WINDOW *map_win, hero_t *hero)
 void render_stat_map(WINDOW *stat_win, game_map_t *game_map)
 {
     // updating every second
-    timeout(UPDATE_STAT_WIN);
+    // timeout(UPDATE_STAT_WIN);
     int HEIGHT, unused_width;
     getmaxyx(stat_win, HEIGHT, unused_width);
     wclear(stat_win);
@@ -384,7 +384,7 @@ char render_main_screen()
     int line = 2;
     box(text_win, 0, 0);
     wattron(text_win, A_BOLD);
-    mvwprintw_center(text_win, line++, tw_width, "This is the main screen");
+    mvwprintw_center(text_win, line++, tw_width, "sir-goot game");
     wattroff(text_win, A_BOLD);
     line++;
     mvwprintw_center(text_win, line++, tw_width, "Press l to load a game");
@@ -402,6 +402,10 @@ char render_main_screen()
         if (effect1(stdscr, time) == -1)
         {
             message_dialog("Error", "effect 1 not working");
+        }
+        if (title(stdscr, time) == -1)
+        {
+            message_dialog("Error", "effect 2 not working");
         }
         // effects
         wrefresh(text_win);

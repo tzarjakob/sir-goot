@@ -4,5 +4,6 @@
 #include <ncurses.h>
 
 int effect1(WINDOW* win, size_t time);
+int title(WINDOW* win, size_t time);
 
 #endif 

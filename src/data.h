@@ -10,7 +10,7 @@
 #define GAME_SPEED 1000
 #define MAXIMUM_GAMES 10
 
-#define UPDATE_STAT_WIN 100
+#define UPDATE_STAT_WIN 2000
 
 #define MAX_TIME_DIALOG_DURATION 5000
 
@@ -40,7 +40,7 @@
 #define BED_T (unsigned char)14
 #define PORTAL_T (unsigned char)15
 
-#define INITIAL_KEYS 1
+#define INITIAL_KEYS 4
 #define INITIAL_MONEY 0
 #define INITIAL_LIVES 3
 #define INITIAL_EXP 0

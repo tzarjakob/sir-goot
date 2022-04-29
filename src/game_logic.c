@@ -88,6 +88,7 @@ int game_loop(const char *path)
             {
                 noecho();
                 render_hero(map_win, &hero);
+                timeout(UPDATE_STAT_WIN);
                 render_stat_map(stat_win, &game_map);
 
                 point_t dest;
@@ -106,8 +107,13 @@ int game_loop(const char *path)
                                              INV_WIN_WIDTH,
                                              (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
                                              (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                    // nodelay(inv_win, FALSE);
+                    nodelay(stdscr, FALSE);
+                    // nodelay(map_win, FALSE);
+                    // nodelay(stat_win, FALSE);
                     show_inventory(inv_win, &game_map);
                     getch();
+                    nodelay(stdscr, TRUE);
                     delwin(inv_win);
                     wclear(stdscr);
                     refresh();
@@ -172,8 +178,10 @@ int game_loop(const char *path)
                                                INV_WIN_WIDTH,
                                                (HEIGHT / 2) - (INV_WIN_HEIGHT / 2),
                                                (WIDTH / 2) - (INV_WIN_WIDTH / 2));
+                    nodelay(stdscr, FALSE);
                     show_chest(chest_win, &game_map);
                     getch();
+                    nodelay(stdscr, TRUE);
                     delwin(chest_win);
                     wclear(stdscr);
                     refresh();
@@ -276,11 +284,14 @@ int game_loop(const char *path)
         }
         else
         {
+            // config.path_initial_map;
+            message_dialog("Could not open map file", config.path_initial_map);
             retval = -1;
         }
     }
     else
     {
+        message_dialog("Errors in config file", "Could not open config file");
         retval = -1;
     }
     return retval;

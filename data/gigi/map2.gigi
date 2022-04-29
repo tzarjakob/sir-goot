@@ -31,7 +31,7 @@ $ doorv 19 3
 
  code computer:10101492*)
 
-
+$ portal 23 1 data/gigi/map1.gigi
 
 
 (* Food chest at the bottom left corner *)
