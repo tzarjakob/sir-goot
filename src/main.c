@@ -13,7 +13,7 @@ int main()
     if ((MIN_HEIGHT > HEIGHT) || (MIN_WIDTH > WIDTH))
     {
         endwin();
-        fprintf(stderr, "Terminal is too small: it is required minimum width=%d and height=%d", MIN_WIDTH, MIN_HEIGHT);
+        fprintf(stderr, "Terminal is too small: it is required minimum width=%d and height=%d\n", MIN_WIDTH, MIN_HEIGHT);
     }
     else
     {

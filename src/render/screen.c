@@ -272,7 +272,6 @@ void message_dialog(const char *topic, const char *message)
     int x_win = (WIDTH * 3) / 8;
     WINDOW *cd_win = newwin(w_height, w_width, y_win, x_win);
     timeout(MAX_TIME_DIALOG_DURATION);
-    // nodelay(cd_win, FALSE);
     wbkgd(cd_win, COLOR_PAIR(2));
     box(cd_win, 0, 0);
     int line = 1;
@@ -295,36 +294,35 @@ int choose_index(char dirs[MAXIMUM_GAMES][BUFFERSIZE], int n_choices)
 {
     int WIDTH, HEIGHT;
     getmaxyx(stdscr, HEIGHT, WIDTH);
-    int win_height = HEIGHT / 2;
-    int win_width = (WIDTH * 6) / 10;
-    WINDOW *choose_game_win = newwin(win_height, win_width,
-                                     HEIGHT / 5, WIDTH / 5);
-    wbkgd(choose_game_win, COLOR_PAIR(1));
+    int w_height = HEIGHT / 4;
+    int w_width = WIDTH / 4;
+    int y_win = (HEIGHT * 3) / 8;
+    int x_win = (WIDTH * 3) / 8;
+    WINDOW *choose_game_win = newwin(w_height, w_width, y_win, x_win);
+    wbkgd(choose_game_win, COLOR_PAIR(SECONDARY_THEME));
 
     int c;
     int current_choice = 0;
     keypad(stdscr, true);
-    // keypad(choose_game_win, true);
     bool end = false;
     do
     {
         box(choose_game_win, 0, 0);
         int line = 1;
-        mvwprintw_center(choose_game_win, line++, win_width, "CHOOSE THE GAME");
+        mvwprintw_center(choose_game_win, line++, w_width, "CHOOSE THE GAME");
         line++;
 
         for (int res_index = 0; res_index < n_choices; res_index++)
         {
             if (res_index == current_choice)
             {
-                wattrset(choose_game_win, COLOR_PAIR(2));
-                mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
-                wattrset(choose_game_win, COLOR_PAIR(1));
+                wattrset(choose_game_win, COLOR_PAIR(MAIN_THEME));
+                mvwprintw_center(choose_game_win, line++, w_width, dirs[res_index]);
+                wattrset(choose_game_win, COLOR_PAIR(SECONDARY_THEME));
             }
             else
             {
-                mvwprintw_center(choose_game_win, line++, win_width, dirs[res_index]);
-                // wrefresh(choose_game_win);
+                mvwprintw_center(choose_game_win, line++, w_width, dirs[res_index]);
             }
             wrefresh(choose_game_win);
         }
